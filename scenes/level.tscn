@@ -5,8 +5,8 @@
 [node name="level" type="Node2D" unique_id=822371455]
 
 [node name="demo_background" type="ColorRect" parent="." unique_id=1517306600]
-offset_right = 993.0
-offset_bottom = 990.0
+offset_right = 1500.0
+offset_bottom = 1500.0
 
 [node name="demo_obstacle" type="ColorRect" parent="." unique_id=1402360381]
 offset_right = 200.0
@@ -17,5 +17,5 @@ color = Color(1, 0.27450982, 0.078431375, 1)
 color = Color(0.07484534, 0.07484526, 0.07484525, 1)
 
 [node name="player" parent="." unique_id=714090470 instance=ExtResource("1_2q6dc")]
-position = Vector2(448, 533)
+position = Vector2(758, 764)
 rotation = 0.0
