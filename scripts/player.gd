@@ -10,6 +10,11 @@ func _physics_process(delta):
 
 	if Input.is_action_pressed("right"):
 		rotation += TURN_SPEED * delta
+	
+	if Input.is_action_pressed("sprint"):
+		SPEED = 500.0
+	else:
+		SPEED = 200.0
 
 	# Move forward/backward
 	var direction = Vector2.ZERO
@@ -22,4 +27,5 @@ func _physics_process(delta):
 
 	velocity = direction * SPEED
 
+	# Apply movement
 	move_and_slide()
