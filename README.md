@@ -49,7 +49,7 @@ This project is primarily a learning and portfolio project focused on game progr
 
 ## Project Status
 
-* [ ] Project Setup
+*  ✅  Project Setup
 * [ ] Player Controller
 * [ ] Flashlight
 * [ ] Enemy AI
