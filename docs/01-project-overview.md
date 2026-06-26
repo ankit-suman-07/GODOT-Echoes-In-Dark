@@ -119,7 +119,7 @@ The project is successful if:
 | Milestone         | Status |
 | ----------------- | ------ |
 | Project Setup     | ✅      |
-| Player Controller | ⬜      |
+| Player Controller | ✅      |
 | Flashlight        | ⬜      |
 | Enemy AI          | ⬜      |
 | Items             | ⬜      |
