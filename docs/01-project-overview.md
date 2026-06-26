@@ -120,7 +120,7 @@ The project is successful if:
 | ----------------- | ------ |
 | Project Setup     | ✅      |
 | Player Controller | ✅      |
-| Flashlight        | ⬜      |
+| Flashlight        | ✅      |
 | Enemy AI          | ⬜      |
 | Items             | ⬜      |
 | Audio             | ⬜      |
