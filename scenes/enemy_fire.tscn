@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://b3gcc4nqqbkst"]
+
+[ext_resource type="Texture2D" uid="uid://bjkvplrdxh77b" path="res://sprites/enemy/enemy_fire.png" id="1_fjh20"]
+[ext_resource type="Script" uid="uid://dyxb20dffh5qj" path="res://scripts/enemy_fire.gd" id="1_l3e4c"]
+[ext_resource type="Texture2D" uid="uid://dp28vjb0dajpm" path="res://assets/lights/2.png" id="3_lo4dn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fjh20"]
+size = Vector2(128, 128)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_fjh20"]
+radius = 240.1333
+
+[node name="enemy_fire" type="CharacterBody2D" unique_id=128610201]
+script = ExtResource("1_l3e4c")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=67858993]
+position = Vector2(9.536743e-07, -3.8146973e-06)
+scale = Vector2(0.77108437, 0.7619047)
+texture = ExtResource("1_fjh20")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=135263820]
+shape = SubResource("RectangleShape2D_fjh20")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=198871031]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1070994443]
+shape = SubResource("CircleShape2D_fjh20")
+
+[node name="fire_light" type="PointLight2D" parent="." unique_id=741963023]
+position = Vector2(3.8146973e-06, 3.8146973e-06)
+scale = Vector2(0.512, 0.512)
+enabled = false
+texture = ExtResource("3_lo4dn")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]

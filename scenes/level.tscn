@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://c445uy5isoi51" path="res://scenes/player.tscn" id="1_2q6dc"]
 [ext_resource type="PackedScene" uid="uid://db82x2h61bich" path="res://scenes/enemy.tscn" id="2_w7c3h"]
+[ext_resource type="PackedScene" uid="uid://b3gcc4nqqbkst" path="res://scenes/enemy_fire.tscn" id="3_w8frs"]
 
 [node name="level" type="Node2D" unique_id=822371455]
 
@@ -23,3 +24,6 @@ rotation = 0.0
 
 [node name="enemy" parent="." unique_id=723888187 instance=ExtResource("2_w7c3h")]
 position = Vector2(1207, 340)
+
+[node name="enemy_fire" parent="." unique_id=128610201 instance=ExtResource("3_w8frs")]
+position = Vector2(268, 1267)
