@@ -1,3 +1,16 @@
 [gd_scene format=3 uid="uid://db82x2h61bich"]
 
-[node name="enemy" type="Node2D" unique_id=1554455589]
+[ext_resource type="Texture2D" uid="uid://dvgi4rmvl1hn0" path="res://sprites/enemy/enemy_ghost.png" id="1_7p1mj"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_md0e3"]
+size = Vector2(128, 128)
+
+[node name="enemy" type="CharacterBody2D" unique_id=723888187]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1057487227]
+position = Vector2(0, -1.9073486e-06)
+scale = Vector2(0.77108437, 0.7619048)
+texture = ExtResource("1_7p1mj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=690220881]
+shape = SubResource("RectangleShape2D_md0e3")

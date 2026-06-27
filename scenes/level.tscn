@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://qjdni6ltyjrf"]
 
 [ext_resource type="PackedScene" uid="uid://c445uy5isoi51" path="res://scenes/player.tscn" id="1_2q6dc"]
+[ext_resource type="PackedScene" uid="uid://db82x2h61bich" path="res://scenes/enemy.tscn" id="2_w7c3h"]
 
 [node name="level" type="Node2D" unique_id=822371455]
 
@@ -19,3 +20,6 @@ color = Color(0.07484534, 0.07484526, 0.07484525, 1)
 [node name="player" parent="." unique_id=714090470 instance=ExtResource("1_2q6dc")]
 position = Vector2(758, 764)
 rotation = 0.0
+
+[node name="enemy" parent="." unique_id=723888187 instance=ExtResource("2_w7c3h")]
+position = Vector2(1207, 340)
