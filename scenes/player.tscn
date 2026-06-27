@@ -6,13 +6,15 @@
 [ext_resource type="Texture2D" uid="uid://dp28vjb0dajpm" path="res://assets/lights/2.png" id="4_dqkch"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qhqgy"]
-radius = 9.706814
+radius = 5.3333335
 
 [node name="player" type="CharacterBody2D" unique_id=214196371]
 rotation = 1.5707964
 script = ExtResource("1_3vyb7")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1119894550]
+position = Vector2(0.6683521, -0.35734606)
+scale = Vector2(0.6, 0.6)
 texture = ExtResource("2_g2els")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1789951592]
@@ -20,15 +22,20 @@ scale = Vector2(6, 6)
 shape = SubResource("CircleShape2D_qhqgy")
 
 [node name="flashlight" type="PointLight2D" parent="." unique_id=131714179]
-position = Vector2(-1.335144e-05, -304)
+position = Vector2(-1.0490739e-05, -240)
 rotation = 3.1415927
+scale = Vector2(0.8, 0.8)
 enabled = false
 color = Color(0.9564424, 0.832268, 0.6793663, 1)
 energy = 2.0
 texture = ExtResource("3_qhqgy")
 
 [node name="light_all_around" type="PointLight2D" parent="." unique_id=1946339389]
+position = Vector2(1.349781, 7.6293945e-06)
+scale = Vector2(0.4, 0.4)
 enabled = false
 energy = 0.8
 texture = ExtResource("4_dqkch")
 texture_scale = 2.0
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1521892752]

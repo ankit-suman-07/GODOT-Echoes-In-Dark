@@ -53,7 +53,7 @@ This project is primarily a learning and portfolio project focused on game progr
 * ✅ Player Controller
 * ✅ Flashlight
 * ✅ Enemy AI
-* [ ] Camera
+* ✅ Camera
 * [ ] Items & Interactions
 * [ ] Level Complete
 * [ ] Audio

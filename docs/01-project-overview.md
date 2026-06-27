@@ -122,7 +122,7 @@ The project is successful if:
 | Player Controller | ✅      |
 | Flashlight        | ✅      |
 | Enemy AI          | ✅      |
-| Camera            | ⬜      |
+| Camera            | ✅      |
 | Items             | ⬜      |
 | Audio             | ⬜      |
 | Polish            | ⬜      |
