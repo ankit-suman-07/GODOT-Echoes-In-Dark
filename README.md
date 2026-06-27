@@ -30,7 +30,7 @@ This project is primarily a learning and portfolio project focused on game progr
 
 | Component | Technology      |
 | --------- | --------------- |
-| Engine    | Godot 4.x       |
+| Engine    | Godot 4.6.1     |
 | Language  | GDScript        |
 | Platform  | Windows / macOS |
 
@@ -52,7 +52,8 @@ This project is primarily a learning and portfolio project focused on game progr
 * ✅  Project Setup
 * ✅ Player Controller
 * ✅ Flashlight
-* [ ] Enemy AI
+* ✅ Enemy AI
+* [ ] Camera
 * [ ] Items & Interactions
 * [ ] Level Complete
 * [ ] Audio

@@ -121,7 +121,8 @@ The project is successful if:
 | Project Setup     | ✅      |
 | Player Controller | ✅      |
 | Flashlight        | ✅      |
-| Enemy AI          | ⬜      |
+| Enemy AI          | ✅      |
+| Camera            | ⬜      |
 | Items             | ⬜      |
 | Audio             | ⬜      |
 | Polish            | ⬜      |
