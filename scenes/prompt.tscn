@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://g08cj5jvtmex"]
+
+[node name="prompt" type="CanvasLayer" unique_id=908427654]
+
+[node name="Label" type="Label" parent="." unique_id=422736856]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -334.0
+offset_top = 136.0
+offset_right = 306.0
+offset_bottom = 256.0
+grow_horizontal = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 48
+text = "Press E to pick up Key"
+horizontal_alignment = 1
+vertical_alignment = 1
