@@ -6,31 +6,164 @@
 [ext_resource type="PackedScene" uid="uid://b6wm1i77vj5ae" path="res://scenes/key.tscn" id="4_mx8sn"]
 [ext_resource type="PackedScene" uid="uid://g08cj5jvtmex" path="res://scenes/prompt.tscn" id="5_ppgk2"]
 
+[ext_resource type="Script" path="res://scripts/level_geometry.gd" id="6_geometry"]
+[ext_resource type="Script" path="res://scripts/level.gd" id="7_level"]
+[ext_resource type="PackedScene" path="res://scenes/level_door.tscn" id="8_door"]
+[ext_resource type="Texture2D" path="res://assets/echoes_assets/items/battery.svg" id="9_battery"]
+[ext_resource type="Texture2D" path="res://assets/echoes_assets/items/note.svg" id="10_note"]
+[ext_resource type="Texture2D" path="res://assets/echoes_assets/props/terminal.svg" id="11_terminal"]
+[ext_resource type="Texture2D" path="res://assets/echoes_assets/props/desk.svg" id="12_desk"]
+
+[ext_resource type="Texture2D" path="res://assets/lights/2.png" id="13_glow"]
+
+[sub_resource type="RectangleShape2D" id="exit_trigger_shape"]
+size = Vector2(128, 128)
+
 [node name="level" type="Node2D" unique_id=822371455]
 
-[node name="demo_background" type="ColorRect" parent="." unique_id=1517306600]
-offset_right = 1500.0
-offset_bottom = 1500.0
+script = ExtResource("7_level")
 
-[node name="demo_obstacle" type="ColorRect" parent="." unique_id=1402360381]
-offset_right = 200.0
-offset_bottom = 200.0
-color = Color(1, 0.27450982, 0.078431375, 1)
+[node name="Geometry" type="Node2D" parent="."]
+script = ExtResource("6_geometry")
 
 [node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=1929404401]
 color = Color(0.07484534, 0.07484526, 0.07484525, 1)
 
 [node name="player" parent="." unique_id=714090470 instance=ExtResource("1_2q6dc")]
-position = Vector2(758, 764)
-rotation = 0.0
+position = Vector2(1713, 447)
+rotation = 3.1415927
 
 [node name="enemy" parent="." unique_id=723888187 instance=ExtResource("2_w7c3h")]
-position = Vector2(1207, 340)
+position = Vector2(2100, 1536)
 
 [node name="enemy_fire" parent="." unique_id=128610201 instance=ExtResource("3_w8frs")]
-position = Vector2(268, 1267)
+position = Vector2(1152, 1536)
 
 [node name="key" parent="." unique_id=1469452097 instance=ExtResource("4_mx8sn")]
-position = Vector2(150, 135)
+position = Vector2(2100, 2619)
 
 [node name="prompt" parent="." unique_id=908427654 instance=ExtResource("5_ppgk2")]
+
+[node name="D01" parent="." instance=ExtResource("8_door")]
+position = Vector2(1712, 864)
+locked = false
+doorway_size = Vector2(224, 16)
+
+[node name="D02" parent="." instance=ExtResource("8_door")]
+position = Vector2(1296, 1008)
+locked = true
+doorway_size = Vector2(16, 160)
+
+[node name="D03" parent="." instance=ExtResource("8_door")]
+position = Vector2(1152, 1264)
+locked = true
+doorway_size = Vector2(128, 16)
+
+[node name="D04" parent="." instance=ExtResource("8_door")]
+position = Vector2(2128, 1008)
+locked = true
+doorway_size = Vector2(16, 160)
+
+[node name="D05" parent="." instance=ExtResource("8_door")]
+position = Vector2(2240, 1264)
+locked = true
+doorway_size = Vector2(128, 16)
+
+[node name="D06" parent="." instance=ExtResource("8_door")]
+position = Vector2(1008, 1696)
+locked = true
+doorway_size = Vector2(16, 128)
+
+[node name="D07" parent="." instance=ExtResource("8_door")]
+position = Vector2(2352, 1696)
+locked = true
+doorway_size = Vector2(16, 128)
+
+[node name="D08" parent="." instance=ExtResource("8_door")]
+position = Vector2(1728, 1824)
+locked = false
+doorway_size = Vector2(128, 16)
+
+[node name="B01" type="Sprite2D" parent="."]
+position = Vector2(951, 978)
+scale = Vector2(2, 2)
+texture = ExtResource("9_battery")
+
+[node name="B02" type="Sprite2D" parent="."]
+position = Vector2(2487, 1005)
+scale = Vector2(2, 2)
+texture = ExtResource("9_battery")
+
+[node name="N01" type="Sprite2D" parent="."]
+position = Vector2(675, 1746)
+scale = Vector2(2, 2)
+texture = ExtResource("10_note")
+
+[node name="N02" type="Sprite2D" parent="."]
+position = Vector2(1497, 1548)
+scale = Vector2(2, 2)
+texture = ExtResource("10_note")
+
+[node name="N03" type="Sprite2D" parent="."]
+position = Vector2(2682, 1746)
+scale = Vector2(2, 2)
+texture = ExtResource("10_note")
+
+[node name="S01" type="Sprite2D" parent="."]
+position = Vector2(1716, 2262)
+scale = Vector2(2, 2)
+texture = ExtResource("11_terminal")
+
+[node name="SecurityDesk" type="Sprite2D" parent="."]
+position = Vector2(1450, 330)
+scale = Vector2(2, 2)
+texture = ExtResource("12_desk")
+
+[node name="ElectricalTerminal" type="Sprite2D" parent="."]
+position = Vector2(2780, 800)
+scale = Vector2(2, 2)
+texture = ExtResource("11_terminal")
+
+[node name="C01" type="Marker2D" parent="."]
+position = Vector2(1713, 2400)
+
+[node name="D09" parent="." instance=ExtResource("8_door")]
+position = Vector2(1728, 2800)
+locked = true
+doorway_size = Vector2(128, 16)
+
+[node name="E01" type="Marker2D" parent="."]
+position = Vector2(1716, 3096)
+
+[node name="ExitTrigger" type="Area2D" parent="."]
+position = Vector2(1716, 3096)
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ExitTrigger"]
+shape = SubResource("exit_trigger_shape")
+
+[node name="Label" type="Label" parent="ExitTrigger"]
+offset_left = -50.0
+offset_top = -24.0
+offset_right = 50.0
+offset_bottom = 24.0
+text = "EXIT"
+horizontal_alignment = 1
+modulate = Color(0.4, 0.9, 0.6, 1)
+
+[node name="MainHallLabel" type="Label" parent="."]
+offset_left = 1632.0
+offset_top = 1584.0
+offset_right = 1850.0
+offset_bottom = 1620.0
+text = "Main Hall"
+modulate = Color(0.65, 0.7, 0.72, 1)
+mouse_filter = 2
+
+[node name="SafeRoomGlow" type="PointLight2D" parent="."]
+position = Vector2(1716, 2110)
+texture = ExtResource("13_glow")
+texture_scale = 2.0
+color = Color(0.3, 0.55, 0.7, 1)
+energy = 0.65

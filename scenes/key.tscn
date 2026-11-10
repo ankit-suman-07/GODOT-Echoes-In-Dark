@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b6wm1i77vj5ae"]
 
-[ext_resource type="Script" uid="uid://cn2n6ucwd8wpa" path="res://scripts/interactables.gd" id="1_fttkb"]
+[ext_resource type="Script" path="res://scripts/exit_key.gd" id="1_fttkb"]
 [ext_resource type="Texture2D" uid="uid://emsq86o03mi6" path="res://assets/key.png" id="1_yk2u2"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_yk2u2"]
