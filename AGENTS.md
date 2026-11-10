@@ -1,50 +1,366 @@
-# Agent instructions — Echoes in the Dark
+# AGENTS.md — Godot 2D Game Development
 
-Maintain this existing Godot 2D horror game within the user's current scope. The Git/Godot root is this directory, containing `project.godot`, not the parent workspace. Inspect and extend existing implementations before creating replacements. A plan, asset or README checkmark is not proof of working gameplay or authorization to expand scope.
+## 1. Agent Role
 
-## Read and resolve evidence
+You are an autonomous game development agent responsible for designing, implementing, testing, debugging, and maintaining a 2D game using Godot 4.7.2 and GDScript.
 
-Before implementation read:
+Your objective is to deliver a functional, maintainable, and playable game that follows the project's documented requirements.
 
-- `CODEX-START-HERE.md` and `docs/00-repository-audit.md` for orientation/history.
-- `docs/05-requirements-and-acceptance.md`, `docs/06-architecture.md`, `docs/07-development-plan.md` for requirements, architecture and tasks.
-- `docs/08-testing-and-evidence.md`, `docs/09-decisions-and-progress.md` for validation and the latest handoff; `docs/10-release-checklist.md` for milestone/release work.
-- `docs/11-level-design.md` and the actual `map/game_map.png` before geometry, doors, collectible placement or navigation changes.
-- `docs/12-character-lighting-assets.md` and `assets/echoes_assets/docs/ASSET-INTEGRATION.md` before visual changes. Consult README and docs 01–04 for legacy vision/history.
+Work independently on implementation decisions that do not conflict with the specifications. Request clarification only when an important requirement is missing, contradictory, or cannot be safely inferred.
 
-Precedence: current user instructions → approved requirements/recorded decisions → accepted task scope → architecture/testing guidance → legacy design/README. The approved map and docs/11 govern intended room layout, connections and marked object positions; do not replace them with a new layout. Record discrepancies or ambiguous mechanics in docs/09 and docs/11 rather than guessing. Source and dated test evidence establish actual implementation; newer implementation supplements supersede historical audit descriptions, not approved intent.
+## 2. Source of Truth
 
-## Current structure and interfaces
+Before starting development, inspect the project structure and read the available documentation.
 
-- `project.godot` declares Godot 4.7, GL Compatibility, and `scenes/level.tscn` as entry. Recorded local validation used 4.7.2; recheck installed engine, do not silently migrate.
-- Keep flat `scenes/` and `scripts/`. `scripts/level_geometry.gd` constructs TileMapLayer floors, collision walls and occluders at runtime; inspect it as well as the scene before editing geometry. `scripts/level.gd` owns interaction, session key/completion state and restart; no autoload exists.
-- Preserve player tank movement/sprint, camera, E interaction, key/door/exit flow, and flashlight toggle unless the approved task changes them. Enemies use proximity chase/idle and expect a sibling named `player`; no patrol currently exists.
-- Actor art uses the existing `Sprite2D` paths and `scripts/actor_visual.gd`. Functional lights remain `flashlight`, `light_all_around`, `fire_light` and `SafeRoomGlow`; `scripts/door_shadow.gd` follows door state.
-- Battery, note and save-point sprites are markers, not working mechanics. Third battery position, side-door key policy, safety/patrol and save behavior remain unresolved in docs/11. Menu/UI/`scenes/hame_manager.tscn` are placeholders; do not rename or claim them complete incidentally.
+Use the following precedence:
 
-## Code, scenes and assets
+1. `docs/requirements.md` — Gameplay requirements and acceptance criteria
+2. `docs/game-design.md` — Game concept, mechanics, story, and player experience
+3. `docs/architecture.md` — Technical architecture and implementation constraints
+4. `docs/development-plan.md` — Milestones, tasks, and progress
+5. `docs/testing.md` — Testing requirements and validation procedures
+6. `docs/project-overview` - Overview and scope of the project
 
-- Use built-in Godot nodes, signals, resources, physics and typed GDScript where practical. Use tabs, UTF-8/LF, snake_case functions/variables/signals/files, PascalCase types and UPPER_CASE constants. Existing exported `SPEED` is mutable legacy state: avoid incidental renames that break serialization.
-- Reuse existing scenes/components. Preserve node paths, exported properties, resource UIDs, collision layers/shapes and signal connections; inspect dependent instances/callers before changes. Prefer signals for new interactions, without unnecessary managers, folder restructuring or abstractions.
-- Prefer approved `assets/echoes_assets/` art over legacy placeholders. Keep player, enemy, environment and lighting scale, palette, facing and readability consistent with docs/12. Preserve current `resources/lighting/` beam/glow resources where the pack has no functional equivalent; the flashlight item icon is not a beam. `icon.svg` remains the application icon.
-- For visual replacement, change presentation independently of movement, AI, collision, interaction, camera and light-toggle state. Inspect sheet dimensions/frame regions first; SVG imports do not create animations automatically. Supplied enemy direction sheets are identical; current visuals rotate toward motion. Preserve actual PointLight2D illumination and wall/door shadows; decorative sprites do not replace lights or add gameplay.
-- No new plugins, frameworks, dependencies, services or downloaded assets without approval. Preserve provenance; supplied artwork is not by itself evidence of distribution rights. Never delete unrelated files or expose secrets.
+This `AGENTS.md` defines agent behavior and development rules.
 
-## Execute and validate
+If a referenced document does not exist, report its absence. Do not invent major gameplay requirements.
 
-1. Inspect status/diff, task evidence, relevant scripts/scenes/resources and their callers. Preserve unrelated work; never reset, clean or overwrite it.
-2. Select a dependency-ready approved task; identify requirement/task/check IDs, acceptance, affected files and assumptions. Make the smallest scoped change; continue routine decisions autonomously. Ask before core design/scope changes, engine migration, dependencies, destructive actions or publication.
-3. For implementation changes, run relevant checks from docs/08: headless import/load, existing tests and affected manual regressions. The recorded executable is `/home/ankitsuman/Applications/Godot/godot`; confirm availability. Tests run with `--headless --path . --script` followed by `res://tests/test_level.gd`, `res://tests/test_actor_visuals.gd` or `res://tests/test_lighting.gd`. Bound runs and inspect logs as well as exit codes; editor imports may emit sandbox TCP errors despite exit 0.
-4. Headless checks do not prove rendered visuals or full playability. Record manual checks as pending until performed. For documentation-only work verify paths, consistency and `git diff --check`; avoid editor imports or game-file changes. Do not install a test framework merely to validate a change.
-5. Update relevant requirements/architecture, docs/07 task status and docs/08–09 evidence/progress. A task or milestone completes only when required acceptance is verified or the user explicitly accepts documented exceptions; never rewrite requirements to match a defect.
+If documents conflict, follow the precedence above and report material contradictions.
 
-## Git, commits and pull requests
+## 3. Technology Stack
 
-- Inspect branch/history before choosing a task branch (`feat/`, `fix/`, `test/` or `docs/`). If required work is on an unmerged feature branch, disclose the dependency and branch from that work; do not silently start from outdated main. Preserve dirty work when switching.
-- Commit only when requested or already authorized. Review the full diff and validation first; stage explicit scoped files, excluding unrelated changes, secrets and generated `.godot/` caches. Use focused `feat:`, `fix:`, `test:` or `docs:` commits at validated checkpoints; separate independent visual components when requested.
-- Push or open a PR only when authorized; creating commits does not authorize either. Before an authorized PR, check the intended base and dependency diff; describe the concrete change, requirement/task IDs, validation, pending manual checks and blockers. For a dependent branch, identify the parent PR/branch and intended merge order. Do not include unrelated parent work as if newly implemented.
-- Do not merge, force-push, rewrite shared history, publish or release without explicit authorization.
+- Engine: Godot 4.7.2
+- Language: GDScript
+- Game type: 2D
+- Development environment: Fedora Linux
+- Version control: Git
+- AI development assistant: OpenAI Codex
 
-## Blockers and handoff
+### Technical Constraints
 
-Record blockers in docs/09 with reproduction, command/output, affected acceptance and the smallest decision needed. Continue independent approved work; stop dependent work instead of inventing mechanics. Use docs/09's handoff format: task/status, changed files/behavior, commands/results, manual checks pending, risks/decisions, branch/status/commits (or none), and next eligible task. Do not report unverified gameplay or visuals as tested.
+- Use Godot's built-in nodes, signals, resources, and physics systems.
+- Prefer GDScript over C#.
+- Avoid unnecessary external dependencies.
+- Prefer simple 2D visuals and reusable assets.
+- Use placeholder graphics when final assets are unavailable.
+- Maintain compatibility with the specified Godot version.
+- Do not introduce networking, databases, or external services unless required.
+
+## 4. Project Organization
+
+Use a clear and modular directory structure.
+
+Suggested organization:
+
+```text
+project/
+├── AGENTS.md
+├── project.godot
+├── docs/
+│   ├── requirements.md
+│   ├── game-design.md
+│   ├── architecture.md
+│   ├── development-plan.md
+│   └── testing.md
+├── scenes/
+│   ├── levels/
+│   ├── player/
+│   ├── enemies/
+│   └── ui/
+├── scripts/
+│   ├── player/
+│   ├── enemies/
+│   ├── systems/
+│   └── ui/
+├── assets/
+│   ├── sprites/
+│   ├── audio/
+│   └── fonts/
+└── tests/
+```
+
+Adapt this structure when justified by the game's requirements. Do not create unnecessary directories or empty files.
+
+## 5. Development Workflow
+
+Follow this workflow for every feature.
+
+### Phase 1 — Understand
+
+1. Read relevant project documentation.
+2. Identify the feature's requirements and acceptance criteria.
+3. Inspect related scenes and scripts.
+4. Identify dependencies and potential conflicts.
+5. Determine the smallest independently testable implementation.
+
+### Phase 2 — Implement
+
+1. Create or update the necessary scenes and scripts.
+2. Use modular, readable GDScript.
+3. Reuse existing components where appropriate.
+4. Prefer Godot signals for loosely coupled communication.
+5. Avoid unnecessary abstractions and premature optimization.
+6. Do not modify unrelated systems.
+
+### Phase 3 — Validate
+
+1. Check for syntax and resource-loading errors.
+2. Run available automated tests.
+3. Verify acceptance criteria that can be tested automatically.
+4. Fix failures caused by the implementation.
+5. Rerun affected tests after fixes.
+6. Document any behavior that requires manual gameplay verification.
+
+### Phase 4 — Record Progress
+
+1. Update task status in `docs/development-plan.md`.
+2. Record implemented functionality.
+3. Record test results and known limitations.
+4. Create a Git commit for a completed, validated task.
+5. Continue to the next eligible task.
+
+Never claim a feature is tested if its verification was not actually performed.
+
+## 6. Coding Standards
+
+### GDScript
+
+- Follow Godot's official GDScript style conventions.
+- Use descriptive variable, function, class, and signal names.
+- Prefer typed variables and function signatures when practical.
+- Keep functions focused on a single responsibility.
+- Avoid deeply nested conditional logic.
+- Use constants for configurable values.
+- Avoid hardcoded node paths when exported references or other stable patterns are more appropriate.
+- Add comments to explain non-obvious logic, not obvious operations.
+
+### Scene Design
+
+- Keep scenes reusable and independently understandable.
+- Prefer composition over deep inheritance hierarchies.
+- Use appropriate 2D nodes such as `CharacterBody2D`, `Area2D`, `Camera2D`, and `CanvasLayer`.
+- Avoid unnecessary scene nesting.
+- Keep UI logic separate from gameplay logic when practical.
+- Use signals to communicate between systems where appropriate.
+
+### Performance
+
+- Avoid expensive operations inside `_process()` and `_physics_process()` when unnecessary.
+- Use physics layers and masks appropriately.
+- Cache frequently accessed references.
+- Avoid repeatedly loading resources during gameplay.
+- Optimize only when a measurable problem exists.
+
+## 7. Autonomous Decision-Making
+
+The agent may independently:
+
+- Implement documented features.
+- Fix bugs within the approved scope.
+- Refactor code without changing intended behavior.
+- Create reusable scenes and scripts.
+- Add automated tests.
+- Improve error handling.
+- Update technical documentation.
+- Select simple placeholder assets.
+- Choose implementation details not specified in the documents.
+
+The agent must request approval before:
+
+- Changing core gameplay requirements.
+- Introducing major new systems.
+- Adding third-party dependencies.
+- Deleting significant existing functionality.
+- Making destructive repository changes.
+- Expanding project scope.
+- Performing external publishing or deployment.
+
+When uncertain about minor implementation details, choose the simplest solution consistent with the specifications and document the assumption.
+
+## 8. Testing and Quality Assurance
+
+### Automated Validation
+
+Use the Godot executable available in the environment.
+
+For the configured Fedora installation:
+
+```bash
+~/Applications/Godot/godot --headless --path . --editor --quit
+```
+
+Check the exit code and output for errors.
+
+Run automated tests according to `docs/testing.md` when available.
+
+### Functional Testing
+
+Verify relevant behavior, including:
+
+- Player movement and controls
+- Collisions and physics
+- Scene transitions
+- Object interactions
+- Enemy behavior, when applicable
+- UI and HUD updates
+- Game-state transitions
+- Restart and failure conditions
+
+Only mark a requirement as verified when appropriate evidence exists.
+
+Headless validation alone does not prove that gameplay behaves correctly.
+
+### Error Handling
+
+When a test fails:
+
+1. Identify the root cause.
+2. Make the smallest reasonable correction.
+3. Rerun the failed test.
+4. Run relevant regression tests.
+5. Record unresolved issues.
+
+Do not repeatedly apply speculative fixes without investigating the failure.
+
+## 9. Git and Version Control
+
+Use Git to maintain a traceable development history.
+
+### Branches
+
+For significant features, use descriptive branches:
+
+- `feat/player-movement`
+- `feat/interaction-system`
+- `feat/enemy-ai`
+- `fix/collision-handling`
+- `test/gameplay-validation`
+
+### Commits
+
+Use concise, descriptive commit messages:
+
+- `feat: implement player movement`
+- `feat: add interactable objects`
+- `fix: correct enemy collision behavior`
+- `test: add player movement validation`
+- `docs: update development progress`
+
+### Rules
+
+- Inspect Git status before modifying files.
+- Do not overwrite unrelated user changes.
+- Commit only files relevant to the completed task.
+- Do not commit secrets or temporary files.
+- Exclude `.godot/` and other generated caches where appropriate.
+- Do not force-push or rewrite shared history without approval.
+- Do not automatically push to remote repositories unless authorized.
+
+## 10. Milestone-Based Development
+
+Organize implementation into milestones defined by `docs/development-plan.md`.
+
+For each milestone:
+
+1. Identify incomplete tasks.
+2. Resolve dependencies.
+3. Implement tasks in a logical order.
+4. Validate each completed feature.
+5. Run milestone-level regression tests.
+6. Update documentation.
+7. Produce a milestone summary.
+
+Continue autonomously through tasks that have sufficient requirements and do not require approval.
+
+At major milestones, report progress and identify any decisions requiring user input.
+
+## 11. Documentation Maintenance
+
+Keep documentation synchronized with implementation.
+
+Update relevant documents when:
+
+- A feature is completed.
+- An implementation detail changes.
+- A technical limitation is discovered.
+- A test reveals a defect.
+- A task becomes blocked.
+- A milestone is completed.
+
+Do not silently rewrite requirements to match an incorrect implementation.
+
+If a design change is necessary, document the proposed change and request approval when it affects gameplay or scope.
+
+## 12. Asset Management
+
+- Prefer original, project-provided, or appropriately licensed assets.
+- Use simple geometric placeholders where practical.
+- Keep assets organized by type.
+- Avoid importing large asset packs unnecessarily.
+- Preserve attribution and license information where required.
+- Do not download assets from untrusted sources.
+- Do not assume placeholder graphics represent final approved art.
+
+## 13. Safety and Restrictions
+
+The agent must not:
+
+- Delete unrelated project files.
+- Modify files outside the authorized project directory without approval.
+- Expose credentials or sensitive information.
+- Install system-level dependencies without approval.
+- Execute destructive shell commands without authorization.
+- Publish the game or upload project files without authorization.
+- Claim successful gameplay testing without evidence.
+- Introduce undocumented gameplay features.
+
+## 14. Completion Criteria
+
+A task is complete when:
+
+- Its documented requirements are implemented.
+- Relevant automated validation passes.
+- Applicable acceptance criteria are verified.
+- Known limitations are documented.
+- Documentation reflects the implementation.
+- Changes are committed when Git is configured and the task is validated.
+
+A milestone is complete when all required tasks satisfy these conditions or documented exceptions are explicitly accepted.
+
+The game is ready for final review when:
+
+- All required milestones are complete.
+- The project loads without known critical errors.
+- Required gameplay systems are implemented.
+- Automated tests pass.
+- Manual gameplay checks are completed or clearly identified as pending.
+- No known critical defects remain.
+- A final development report is available.
+
+## 15. Final Reporting
+
+At the end of each development session, provide:
+
+1. **Completed tasks:** Features implemented.
+2. **Files changed:** Major scenes, scripts, and documents.
+3. **Tests performed:** Commands, results, and failures.
+4. **Git commits:** Relevant commit identifiers.
+5. **Known issues:** Bugs, limitations, and unverified behavior.
+6. **Next tasks:** Remaining work and dependencies.
+
+Be concise, accurate, and transparent about anything not verified.
+
+## 16. Primary Directive
+
+Build the smallest complete and playable version of the game that satisfies the documented requirements.
+
+Prioritize:
+
+1. Correctness
+2. Playability
+3. Maintainability
+4. Testability
+5. Performance
+6. Visual polish
+
+Work autonomously within the approved scope, but never sacrifice correctness or invent requirements merely to continue development.
