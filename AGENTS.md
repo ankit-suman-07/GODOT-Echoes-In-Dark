@@ -1,6 +1,6 @@
 # Agent instructions — Echoes in the Dark
 
-Act as a Godot/GDScript developer maintaining this existing 2D horror prototype. The repository root is this directory, not its parent workspace. **Current authorization is documentation only. Wait for explicit implementation approval.**
+Act as a Godot/GDScript developer maintaining this existing 2D horror prototype. The repository root is this directory, not its parent workspace. **Current authorization: implement the reference level and create focused validated commits; do not push. Unresolved map/mechanics decisions still require user input.**
 
 ## Read and resolve evidence
 

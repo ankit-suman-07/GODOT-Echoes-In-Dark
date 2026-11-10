@@ -1,3 +1,13 @@
+# Current implementation supplement
+
+The original audit below is historical. `project.godot` now launches `scenes/level.tscn`. Existing player/camera/light code is unchanged; existing enemy scenes remain siblings of player. `scripts/level_geometry.gd` builds a floor TileMapLayer/TileSet from asset-pack SVG and generates boundary StaticBody2D colliders, wall sprites and occluders from grid cells at runtime. No autoload added.
+
+`level.gd` owns session key/completion flags, selects nearby interactables through an occlusion ray, handles E interaction, listens for key collection/exit-door unlock and ExitTrigger body entry, and stops actors on completion. R reloads the level. `exit_key.gd` extends existing interactables base; emits `collected` once and removes key. `level_door.gd` uses that same base, a StaticBody2D barrier, separate state sprites, safe-close physics query and `unlock_requested` signal. Level grants only D09 unlock on exit-key ownership; six side doors have no approved unlock policy.
+
+Battery/note/save-point sprites are placement markers, not gameplay systems. Enemy patrol, safety, resource charge, notes content, persistence, menus/pause and catch/loss remain unimplemented. See docs/07 current status and docs/11 spatial register. Tests are built-in SceneTree integration checks in `tests/test_level.gd`.
+
+---
+
 # Architecture
 
 This describes serialized source at audit, not the legacy intended Main/GameManager architecture. `project.godot` has no main scene or autoload. Explicitly run `scenes/level.tscn` for the prototype.

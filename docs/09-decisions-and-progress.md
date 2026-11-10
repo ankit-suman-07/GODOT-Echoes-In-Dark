@@ -2,7 +2,7 @@
 
 ## Current status
 
-Documentation phase only, dated 2026-11-09. Baseline `ff57e1e`; implementation is not approved. D00 complete: repository inspected, documentation authored and validated. T01–T10 pending approval. No gameplay changes, commits or pushes made. Runtime load evidence is in docs/08; manual gameplay remains untested.
+Historical documentation baseline, dated 2026-11-09 (superseded by implementation handoff below). Baseline `ff57e1e`; implementation is not approved. D00 complete: repository inspected, documentation authored and validated. T01–T10 pending approval. No gameplay changes, commits or pushes made. Runtime load evidence is in docs/08; manual gameplay remains untested.
 
 ## Evidence-backed decisions
 
@@ -58,3 +58,15 @@ Next session: request or read implementation approval, resolve Q01 and select T0
 D11 complete (documentation only): visually inspected `map/game_map.png`, compared all scenes/scripts and existing docs including `assets/echoes_assets/docs/ASSET-INTEGRATION.md`; added docs/11, map-alignment workstream in docs/07, reading/authority rules and requirements/start-guide links. L01–L06 remain pending implementation approval. LD-Q01–05 in docs/11 refine Q03–05: third battery, six side-door locks, south thresholds, save/safety conflict, world scale and patrol permissions. Map fixes intended layout and exit-key position; those are no longer free layout choices.
 
 Pre-existing changes preserved: project metadata now declares 4.7, generated import sidecars differ on disk, and an untracked asset pack exists. Historical docs/00 and runtime results in docs/08 describe their original baseline, not a fresh runtime validation. No scene/script/config/image/asset edits or new runtime tests in D11; static validation and file hashes used to confirm this session's Markdown-only changes. No commit/push. Next: review LD-Q01–05; after explicit implementation approval select L01 after T01, then map geometry T05. Do not treat map documentation approval as level/save implementation approval.
+
+## Implementation handoff — reference-level foundation
+
+Authorization: latest user instruction approves level implementation and focused commits, no push. Baseline `1015c12`; working tree was clean. Branch `feat/reference-level`, Godot 4.7.2. Full task statuses in docs/07 override old pending-approval entries above.
+
+Implemented: runtime TileMapLayer floors and collision/occluder walls for all nine map areas; calibrated spawn and ten structural connections; eight registered side/start/safe door instances plus final exit door; two openable doors; six locked side doors without invented key mapping; proximity/occlusion-aware E interaction; one-shot exit key; final keyed door, physical completion trigger, movement stop and R restart. Existing movement/camera/light and enemy chase scripts unchanged. Asset-pack floor/wall/door/item/prop art integrated; safe ambient glow is visual only. Two batteries, three notes and save terminal are visual markers, not functional resource/content/save systems.
+
+Validation: 72 engine-backed integration checks pass; main scene smoke passes. Editor import exit 0 still reports sandbox TCP errors. Full evidence/commands and test timing correction in docs/08. Manual visuals/control playthrough pending. No third-party dependencies.
+
+Major blockers requiring user input (question sent during implementation): third battery location; six red-door key policy; Safe Room south door semantics; save checkpoint/persistence and safe/enemy boundary rules. Patrol/spawn/door access and battery values/note text also remain unspecified. Existing two enemies are retained and repositioned in Hall; no patrol exists to reuse. Final keyed exit follows explicit R05 without changing collectible gates. C01 is structural connected floor, not an approved door behavior. A full playable level is not claimed.
+
+Next: resolve these design choices, then finish L03–L05/T06–T08 and run full LV01–LV06. Do not add an arbitrary third battery or a save lifetime to bypass blockers. Commit identifiers are reported in the session response; inspect `git log -2 --oneline`. No push authorized.

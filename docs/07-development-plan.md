@@ -1,6 +1,6 @@
 # Development plan
 
-All implementation tasks are **pending approval**. Complexity: S = one localized change; M = several coupled edits; L = multiple gameplay paths. Baseline functionality must be verified and preserved, not reimplemented. “Done” requires acceptance evidence, documentation updates and no unresolved relevant regressions. Commits below are suggested checkpoints only; no commits without instruction.
+The latest user instruction approves reference-level implementation and focused commits (no push). Current status is recorded below; unresolved gameplay decisions remain blocked. Original task tables define acceptance, not current completion. Complexity: S = one localized change; M = several coupled edits; L = multiple gameplay paths. Baseline functionality must be verified and preserved, not reimplemented. “Done” requires acceptance evidence, documentation updates and no unresolved relevant regressions. Commits below are suggested checkpoints only; no commits without instruction.
 
 | Milestone / task | Scope and files (new files explicitly proposed) | Dependencies | Acceptance / verification | Size | Suggested branch; checkpoint |
 | --- | --- | --- | --- | --- | --- |
@@ -18,9 +18,9 @@ All implementation tasks are **pending approval**. Complexity: S = one localized
 
 D00 is the only completed task in this phase; completion means documentation and recorded checks, not gameplay approval. Add focused automated checks alongside approved changes when they protect state transitions, once-only events or resets; no test framework currently exists. Split M/L tasks further before implementation if their acceptance cannot be reviewed in one change. Prefer completing T02–T06 before new resource/content mechanics.
 
-## Map alignment workstream — pending implementation approval
+## Map alignment workstream
 
-Authority: `map/game_map.png` and docs/11. Spatial layout is now supplied, but unresolved mechanics remain gated. D11 (map documentation) is complete; none of L01–L06 is implemented. These tasks refine, rather than duplicate, T05/T04/T06/T07/T08. T05 now runs before final T04 integration; prototype interaction/session work T02–T03 may proceed separately once approved. No task may invent a third battery, extra keys, or save behavior.
+Authority: `map/game_map.png` and docs/11. Spatial layout is now supplied, but unresolved mechanics remain gated. D11 (map documentation) is complete; see current status below for implemented subsets. These tasks refine, rather than duplicate, T05/T04/T06/T07/T08. T05 now runs before final T04 integration; prototype interaction/session work T02–T03 may proceed separately once approved. No task may invent a third battery, extra keys, or save behavior.
 
 | Task / scope | Files and dependencies | Acceptance / verification | Complexity | Suggested branch; commit checkpoint (only if requested) |
 | --- | --- | --- | --- | --- |
@@ -32,3 +32,23 @@ Authority: `map/game_map.png` and docs/11. Spatial layout is now supplied, but u
 | L06 — verify complete reference level | Level-related scenes/scripts and docs/08–11; T04/T06–T08, L03–L05 complete | Room/edge/door/item inventory matches image and approved discrepancies; full start/key/escape and patrol/safety/reset checks; LV01–06, V01–06 all recorded; preserve baseline; no manual pass inferred from headless load | M | `test/reference-level`; `test: record map alignment evidence` |
 
 Dependency sequence: T01 → L01 → T05 → L02; T02 → T03 can run independently of geometry. L03 joins L02 + T03; L04 joins L02 + T02; T04 joins T03 + L02 + L03; L05 joins L02/L03 + resolved safety/door policies; T06 follows L03/L05, then T07/T08 complete placed content; L06 gates T10 alongside T09. L04 does not claim functional batteries/notes before T07/T08. Save implementation is excluded from this sequence pending a separate scope decision/task.
+
+## Implementation status — reference-level branch
+
+Baseline `1015c12`, branch `feat/reference-level`. This is a usable geometry/interaction/escape foundation, **not a complete playable release**. Automated evidence is in docs/08. All visual/manual acceptance remains pending.
+
+| Tasks | Current status / evidence / remaining work |
+| --- | --- |
+| T01 | Main scene configured to level on existing 4.7 metadata; runtime smoke passes on installed 4.7.2. Manual V02 pending; no engine migration. |
+| L01 | Coordinate calibration implemented: image ×3, snapped to 32-unit grid. Minimum clear doorway 120 units after wall thickness, fitting existing 64-diameter player and 80×80 enemies. Other LD-Q05 gameplay decisions remain blocked. |
+| T05 | Nine-area structural layout implemented with TileMapLayer floors and physics/occluding walls. Automated floor connectivity, wall casts and open-door clearances pass. LV01 manual map/visual walk-through pending. |
+| L02 | Security spawn, all eight side/start/safe door instances, final D09 door, C01 opening and E01 marker placed. C01 is structural opening only; final semantics pending. |
+| T02 | E proximity/LOS interaction and key collection once/session ownership implemented. Real-time manual control checks pending. |
+| T04 | R05 subset implemented: final door unlock with exit key, physical completion trigger, stop actors, R reload. Key retained; full menu/pause/loss lifecycle (T03) not implemented. Automated trigger/reset checks pass. |
+| L03 | Two openable doors implemented; six red doors remain locked with no invented unlocking key policy. Blocked LD-Q02. |
+| L04 | B01/B02 and N01–N03 visual markers, functional K01, S01 terminal marker and E01 exit placed. No third battery location invented; battery/note/save gameplay remains blocked/unimplemented. |
+| L05 / T06 | Existing two enemies and their original chase/light scripts preserved, repositioned in Hall. No patrol added; safe exclusion/patrol/door permissions await decisions. Safe lighting is visual only. |
+| T07 / T08 | Battery charge/drain parameters, note text, safe behavior and save persistence unresolved. Markers do not satisfy gameplay acceptance. |
+| L06 / T10 | 72 automated checks pass for the implemented subset; full level/gameplay/release acceptance blocked. No manual/visual/export verification. |
+
+Next decision input: third battery location, side-door key assignment, C01 door semantics, save persistence and safety/enemy access. User requested a save point, superseding the old blanket no-save exclusion, but did not define save data/lifetime. Continue dependent systems only when clarified; no working save is claimed.

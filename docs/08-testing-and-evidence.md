@@ -14,7 +14,7 @@
 | V07 | Manual stability/presentation | Full loop with sound/display; repeated win/lose/restart cycles, no errors, no accumulating nodes/audio; profile representative play on target hardware and record frame-time/memory observations. No numerical performance budget approved. |
 | V08 | Export/manual platform | Export approved target with matching templates, run outside editor, complete full loop and check controls/assets/window/audio. Record artifact/version/platform and results. |
 
-No automated test suite, test framework, CI or test runner exists in this repository. V03–V06 automation is proposed, not available. Engine load checks do not assert movement, collisions, rendering, AI correctness or acceptance of gameplay. Missing coverage includes interaction, resources, AI, state transitions and resets.
+At the original audit no automated test suite, test framework, CI or test runner existed. A dependency-free integration suite is now available as recorded below. V03–V06 automation is proposed, not available. Engine load checks do not assert movement, collisions, rendering, AI correctness or acceptance of gameplay. Missing coverage includes interaction, resources, AI, state transitions and resets.
 
 ## Safe environment commands
 
@@ -63,3 +63,23 @@ Engine: `4.7.2.stable.official.ed1daf0bf`. Copy: `/tmp/echoes-audit-vj9zyweq/pro
 | V00 static review | 0 | 25 source/import-input resource path occurrences resolve; generated cache outputs excluded. Only nine Markdown files changed/added; README and docs/01–04 unchanged; `git diff --check` clean. Requirements/tasks/check references reviewed; suggested branch names are not file paths. |
 
 For the rerun, Python passed an environment copy with `XDG_DATA_HOME=/tmp/echoes-audit-vj9zyweq/data`, `XDG_CONFIG_HOME=/tmp/echoes-audit-vj9zyweq/config` and `XDG_CACHE_HOME=/tmp/echoes-audit-vj9zyweq/cache`, after creating those directories. Reproduce with fresh temporary directories rather than relying on this copy. No home variable was changed. No manual gameplay or export checks were run; standalone scene coverage beyond the level's instances remains pending.
+
+## Reference-level implementation evidence — 2026-11-09
+
+Baseline `1015c12`, branch `feat/reference-level`; installed Godot `4.7.2.stable.official.ed1daf0bf`. No pre-existing working-tree edits at implementation start. Environment used temporary `XDG_DATA_HOME=/tmp/echoes-level-data`, `XDG_CONFIG_HOME=/tmp/echoes-level-config`, `XDG_CACHE_HOME=/tmp/echoes-level-cache`.
+
+Commands (from repository root, using that environment):
+
+```bash
+/home/ankitsuman/Applications/Godot/godot --headless --path . --editor --quit
+/home/ankitsuman/Applications/Godot/godot --headless --path . --script res://tests/test_level.gd
+/home/ankitsuman/Applications/Godot/godot --headless --path . --quit-after 120
+git diff --check
+```
+
+- Editor import exited 0; sandbox TCP listener errors remain. No script/resource errors reported; do not call editor import error-free.
+- Final integration suite: **72 checks, 0 failures**, exit 0. All ten scene resources load. Checks cover structural floor connectivity, object anchors on floor, closed barriers, open doorway clearance for unchanged player/enemy shapes, locked-side-door refusal, closure obstruction by actor, external/internal wall blocking, interaction selection, one-shot key ownership/removal, keyless completion rejection, final exit unlock, real physics `body_entered` completion and fresh key/completion reset.
+- Earlier integration run waited only two physics ticks after teleporting the test actor into the exit trigger; it failed the timing assertion. Waiting four ticks for physics overlap delivery resolved this test synchronization issue. Final suite tests actual trigger signal delivery rather than directly calling completion for its success case.
+- Main-scene bounded runtime smoke: exit 0, no errors reported. Resource path/static whitespace checks pass; original player/enemy scripts and player/camera scene remain unchanged.
+
+Limitations: tests temporarily disable barriers to measure structural clearances; this does not prove side rooms are reachable with unresolved locked-door keys. No safe behavior, patrol, battery depletion/recharge, note reading, save persistence, catch/loss, pause/menu or exports tested because these are not implemented. Fresh scene instantiation reset is tested; R keyboard reload still needs a manual check. Headless physics is not a visual check or complete player-input playthrough. Manual LV01–LV06/V02–V07 remain pending for the implemented subset; full acceptance remains blocked by docs/11 decisions.
