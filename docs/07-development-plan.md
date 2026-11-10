@@ -64,3 +64,9 @@ User-approved visual-only scope, based on `cd2c61c` from `feat/reference-level` 
 | AV03 — functional light visuals | Implemented; automated checks pass | VX03: soft forward cone, native radial glow, inherited aim and soft wall/door shadows; no toggle/charge mechanics change. 28 lighting + 58 actor + 72 level checks pass. Rendered VX03/manual V02 checks pending. |
 
 These task statuses do not mark manual visual acceptance, T06 patrol or T07 battery mechanics complete. No push/merge authorized.
+
+## OR01 — vertical orientation correction
+
+User-approved correction from `4bfb5a6` on main; branch `fix/invert-level-vertical`. **Implemented; automated LD07 verification passes, manual visual/playthrough checks pending.** Reflect existing layout about y=1664 using world y′=3328−y; player starts in Security at `(1713,2881)` facing up, Exit at `(1716,232)`. Room rectangles, ten connections, all 25 placed world nodes, collider/occluder generation and upright labels aligned. No movement/AI, door rules, assets, collider sizes, UI, navigation or camera-limit redesign; none of the pre-existing gameplay blockers is resolved.
+
+Files: `scenes/level.tscn`, `scripts/level_geometry.gd`, coordinate fixtures in level/lighting tests, new `tests/test_level_orientation.gd`, documentation. Dependencies: merged level and character/light work already on main. Acceptance: LD07/docs/11; all floor/wall reflection signatures and placements match baseline, start-to-key/exit gating unchanged, initial forward/back input and chase/camera behavior verified. Validation: orientation 63, level 72, actor 58 and lighting 28 checks pass; headless smoke passes. Editor import retains sandbox TCP warnings/errors; see docs/08. Manual action: walk upward from Security, check room/door approach directions, camera/readability, upright sprites/UI and shadows. Focused commit checkpoint: `fix: invert level vertically while preserving progression`; no push/merge.

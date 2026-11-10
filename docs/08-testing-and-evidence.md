@@ -104,3 +104,22 @@ Results: actor suite **58/58**, lighting suite **28/28**, existing level suite *
 Test harness corrections during development: frame wrapping legitimately returns frame 0 during movement, so animation checks assert progression rather than nonzero frame; native gradient textures cannot return rendered image pixels under the dummy headless renderer, so the radial check samples its CPU Gradient instead. Approximate comparison is used for float energy values. The stalled initial lighting test was interrupted; bounded reruns pass. These corrections do not establish rendered shadow/gradient quality.
 
 Manual VX01–VX03 (docs/12), V02 and relevant V05 remain pending: sprite facing/alignment, diagonal/backwards motion, sprint cadence, camera, visual light range/readability, rendered wall/door shadows and chase appearance. No gameplay/visual pass is inferred from import or headless checks. No battery or patrol test is claimed: those mechanics do not exist in current source and were outside this task.
+
+## Vertical orientation correction evidence
+
+Baseline `4bfb5a6`, clean tree, branch `fix/invert-level-vertical`. Installed engine 4.7.2. Runs used temporary `XDG_DATA_HOME=/tmp/echoes-orientation-data`, `XDG_CONFIG_HOME=/tmp/echoes-orientation-config`, `XDG_CACHE_HOME=/tmp/echoes-orientation-cache` and `timeout 30` per command:
+
+```bash
+/home/ankitsuman/Applications/Godot/godot --headless --path . --editor --quit
+/home/ankitsuman/Applications/Godot/godot --headless --path . --script res://tests/test_level_orientation.gd
+/home/ankitsuman/Applications/Godot/godot --headless --path . --script res://tests/test_level.gd
+/home/ankitsuman/Applications/Godot/godot --headless --path . --script res://tests/test_actor_visuals.gd
+/home/ankitsuman/Applications/Godot/godot --headless --path . --script res://tests/test_lighting.gd
+/home/ankitsuman/Applications/Godot/godot --headless --path . --quit-after 120
+```
+
+Results: orientation **63/63**, level **72/72**, actor **58/58**, lighting **28/28**, all exit 0. Main-scene smoke exit 0 with no runtime errors. Editor import exit 0 with the known restricted TCP listener errors; no script/resource import errors reported.
+
+New orientation regression checks inverse-reflected runtime floor and wall signatures against pre-correction geometry (all 3640 cells and 710 colliders), all 25 placed world positions, spawn/exit containment, upright transforms/labels/UI, follow-camera configuration, injected upward/downward input at initial facing, structural door-gated reachability to corridor key/top Exit, and existing chase callbacks/motion at mirrored spawns. Existing tests retain body-shape casts, key/completion/reset and flashlight/shadow state coverage, with old absolute coordinates reflected. No patrol or navigation verification is claimed: these systems are absent. Locked side rooms remain locked exactly as before; tests do not invent a key policy.
+
+The first new test run used a Node2D-style property on a Control label; the test harness was corrected to `get_global_transform()` and rerun successfully. No game logic change was needed. Static resource checks, baseline-preservation review and `git diff --check` pass. Manual checks pending: upward full-route playthrough/restart, readable upright art/text, camera framing, rendered flashlight/door/wall shadows and chase appearance. Headless validation alone does not prove visual or full gameplay acceptance.

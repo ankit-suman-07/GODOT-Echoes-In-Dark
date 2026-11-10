@@ -1,10 +1,74 @@
 # Reference level design
 
-Status: structural geometry, basic doors/key/escape implemented; **full gameplay incomplete**. Original visual review: 2026-11-09. See implementation supplement below; original registers remain intended design. The user designates [map/game_map.png](../map/game_map.png) authoritative for intended room layout, connections and marked object locations, despite its internal “MAP EXAMPLE” caption. Mechanics not specified by the image remain decisions, not inferred requirements.
+Status: structural geometry, basic doors/key/escape implemented; **full gameplay incomplete**. Original visual review: 2026-11-09. See implementation supplement below; original registers remain intended design. The user designates [map/game_map.png](../map/game_map.png) authoritative for intended room layout, connections and marked object locations, despite its internal “MAP EXAMPLE” caption. Mechanics not specified by the image remain decisions, not inferred requirements. **The latest user-approved vertical correction below supersedes the original image’s compass orientation: start at bottom, escape at top.**
 
-Source image: 1402×1122 pixels; SHA-256 `89089e9ab5a4ab74a3fc954a0de798ecd3251ddc776e5ef99841734fd987f790`. Coordinates below are approximate image-pixel centers from top-left, x right/y down, generally within ~10 pixels. They are reference anchors, **not Godot world coordinates**, scale, tile size or collider dimensions. Legend/sidebar icons are excluded from counts. Preserve this image; approve any design departure explicitly.
+Source image: 1402×1122 pixels; SHA-256 `89089e9ab5a4ab74a3fc954a0de798ecd3251ddc776e5ef99841734fd987f790`. Coordinates in the preserved original-image registers below are approximate image-pixel centers from top-left, x right/y down, generally within ~10 pixels. They are reference anchors, **not Godot world coordinates**, scale, tile size or collider dimensions. Legend/sidebar icons are excluded from counts. Preserve this image; approve any design departure explicitly.
 
-## Rooms, purposes and connections
+## Approved runtime orientation — Security bottom, Exit top
+
+The user explicitly corrected vertical orientation after the level/visual implementation. Preserve the original image as the source of room topology, proportions and object associations, but apply the approved reflection to all spatial coordinates. Do not restore its original top-start orientation or flip the image’s labels into the game.
+
+Reflection: **world `(x, y)` → `(x, 3328 − y)`** about y=1664. Existing floor bounds y=96…3232 are preserved. For 32-unit cells use `cell_y′ = 103 − cell_y`; rectangle `(x, y, width, height)` becomes `(x, 104 − y − height, width, height)`. Image ×3/grid-snapped calibration is followed by this reflection; image pixels are not themselves world coordinates. All room sizes, X coordinates, connections, door rules, actor hitboxes and object counts remain unchanged.
+
+| Runtime area | Current location / connections |
+| --- | --- |
+| Security Room | Southernmost/bottom, world y=2688…3232. Player `(1713,2881)` faces up; northern neck/D01 leads into Hall |
+| Main Hall | Central joined passages (grid rects `(41,70,25,5)`, `(50,62,7,15)`, `(32,48,41,15)`); D01 toward bottom, D08 toward top |
+| Storage Room | Lower-left branch, y=2112…2624; east D02 and north D03 connect to Hall |
+| Electrical Room | Lower-right branch, y=2112…2624; west D04 and north D05 connect to Hall |
+| Utility Room | Upper-left branch, y=1344…2016; east D06 connects to Hall |
+| Observation Room | Upper-right branch, y=1344…2016; west D07 connects to Hall |
+| Safe Room | Above Hall, y=928…1472; south D08 leads to Hall, north C01 to Corridor |
+| Exit Corridor | Above Safe Room, y=544…896; south C01 and north D09; exit key remains before the locked exit |
+| Exit | Northernmost/top, y=96…512; southern D09 from Corridor; E01/trigger `(1716,232)` |
+
+Progression is now **upward**: Security → Hall → Safe Room → Exit Corridor/key → Exit. Room adjacency and optional locked branches are unchanged. D01/D08 are openable, D02–D07 remain locked under the existing unresolved key policy, and D09 still unlocks with the exit key. C01 remains an opening without a new door mechanic.
+
+```mermaid
+flowchart BT
+  Security[Security / Start at bottom] --- Hall[Main Hall]
+  Hall --- Storage[Storage]
+  Hall --- Electrical[Electrical]
+  Hall --- Utility[Utility]
+  Hall --- Observation[Observation]
+  Hall --- Safe[Safe Room]
+  Safe --- Corridor[Exit Corridor / Key]
+  Corridor --- Exit[Exit at top]
+```
+
+| Placed node(s) | Reflected world position |
+| --- | --- |
+| D01 | `(1712, 2464)` |
+| D02 | `(1296, 2320)` |
+| D03 | `(1152, 2064)` |
+| D04 | `(2128, 2320)` |
+| D05 | `(2240, 2064)` |
+| D06 | `(1008, 1632)` |
+| D07 | `(2352, 1632)` |
+| D08 | `(1728, 1504)` |
+| C01 | `(1713, 928)` |
+| D09 | `(1728, 528)` |
+| B01 | `(951, 2350)` |
+| B02 | `(2487, 2323)` |
+| N01 | `(675, 1582)` |
+| N02 | `(1497, 1780)` |
+| N03 | `(2682, 1582)` |
+| key | `(2100, 709)` |
+| S01 | `(1716, 1066)` |
+| enemy | `(2100, 1792)` |
+| enemy_fire | `(1152, 1792)` |
+| SecurityDesk | `(1450, 2998)` |
+| ElectricalTerminal | `(2780, 2528)` |
+| SafeRoomGlow | `(1716, 1218)` |
+| E01 and ExitTrigger | `(1716,232)` |
+
+`scenes/level.tscn` contains the reflected placed nodes and Hall label rectangle. `scripts/level_geometry.gd` contains reflected room/connection rectangles; its unchanged generator rebuilds floors, colliders and occluders. No negative scale is used. Actor/prop textures, local animation transforms, door sizes, light textures/local aim and screen-space UI remain upright. Room labels anchor inside the reflected rooms. Player instance rotation is 0 instead of PI, so forward W/Up initially moves up, S/Down initially moves down, and the flashlight aims up. Existing tank turning remains unchanged; no controller redesign.
+
+No NavigationRegion2D, NavigationAgent2D, patrol route or custom Camera2D limits exists to reflect. Existing camera follows the repositioned player with rotation ignored; unchanged global bounds require no limit adjustment. Patrol/safety/save/battery gaps remain exactly as before this correction.
+
+**LD07 acceptance:** Security spawn lies below Exit; every existing floor/collider/node is vertically reflected with dimensions and X preserved; original door gating and key-to-exit route remain; all text/visual transforms stay upright; forward/back input, follow camera, lights and current chase work at the new positions. Verify with `tests/test_level_orientation.gd` (63 checks), the existing level/actor/lighting suites, and manual upward-route/visual/camera playtesting. Automated verification passes; rendered aesthetics and a full manual playthrough remain pending (docs/08).
+
+## Original-image room layout and connections (historical orientation)
 
 The Main Hall is a continuous cross-shaped circulation space, including the upper horizontal passage and the central north/south spine. Small outlined recesses flanking that spine have no room labels; do not invent additional rooms or passages through them. No direct Storage–Utility or Electrical–Observation connection is depicted.
 
@@ -34,7 +98,7 @@ flowchart TD
 
 Diagram edges show adjacency, not initial traversability. D01 is the Security–Hall openable threshold. Both connections per upper side room must be retained; do not collapse them into one doorway.
 
-## Door and opening register
+## Original-image door and opening register
 
 Legend: red = “Locked Door (Requires Key)”; tan = “Door (Can Open)”; white = wall/boundary. Red does not identify which key, whether keys are consumed, or whether doors unlock together. Do not assume the exit key opens every red door.
 
@@ -53,7 +117,7 @@ Legend: red = “Locked Door (Requires Key)”; tan = “Door (Can Open)”; whi
 
 Six clear red markers and two clear tan thresholds; C01 is not counted as a confirmed third openable door. Door swing, initial open/closed state for tan doors, use from either side, interaction distance and enemy operation rules are unspecified.
 
-## Object register and counts
+## Original-image object register and counts
 
 | ID | Marker / intended room and position | Count / certainty |
 | --- | --- | --- |
@@ -80,7 +144,7 @@ The map note says the enemy patrols throughout the facility. It specifies no rou
 
 Safe Room is visually identified and marked “Save Point”; it supports the legacy rest/safety intent. Invulnerability, exclusion, resource refills, autosave/manual save, respawn and persistence across launches are **not specified**. Keep the marker's intended location in planning; no working save system is authorized. Docs/01 excludes saves and docs/05 P04 proposes session-only state. Resolve this conflict before enabling any save behavior.
 
-## Comparison with current implementation
+## Original audit comparison (historical; see implementation supplements)
 
 - `scenes/level.tscn` contains only demo ColorRects, dark CanvasModulate, player, two enemy instances, key and fixed prompt. No named map rooms, physical walls, doors, navigation, save point, exit, batteries or notes. Map texture is not referenced by scenes.
 - Current player position (758,764) and key (150,135) are prototype world positions and do not correspond to map anchors. No image-to-world transform exists.
@@ -117,7 +181,7 @@ Implementation tasks and ordering are in docs/07. This review performed visual i
 
 ## Implementation supplement — `feat/reference-level`
 
-Image ×3 approximates world coordinates, snapped to a 32-unit floor grid (each cell corresponds to 10⅔ image pixels). `scripts/level_geometry.gd` records eight peripheral room rectangles, three joined Main Hall rectangles and ten connection rectangles. Boundary colliders/occluders derive from the union, preserving both upper side-room entrances; actor hitboxes unchanged. Minimum door span 128 units, 120 clear between wall faces. Geometry is constructed at runtime; the editor shows authored actors/doors/markers but generated floors/walls require Play/Remote inspection.
+Before the vertical correction, image ×3 approximated world coordinates, snapped to a 32-unit floor grid (each cell corresponds to 10⅔ image pixels). `scripts/level_geometry.gd` records eight peripheral room rectangles, three joined Main Hall rectangles and ten connection rectangles. Boundary colliders/occluders derive from the union, preserving both upper side-room entrances; actor hitboxes unchanged. Minimum door span 128 units, 120 clear between wall faces. Geometry is constructed at runtime; the editor shows authored actors/doors/markers but generated floors/walls require Play/Remote inspection.
 
 `scenes/level.tscn` now places registered objects and doors; two confirmed batteries and all three notes are visual-only sprites, S01 is a terminal marker. No save behavior, third battery or extra keys were invented. Existing enemies remain direct-chase actors in Hall, without patrol/safety enforcement. Safe Room glow is visual, not a safety guarantee. These are explicit gaps, not completed requirements.
 

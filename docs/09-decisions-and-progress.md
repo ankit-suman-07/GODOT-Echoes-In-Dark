@@ -80,3 +80,11 @@ Implemented: four player direction sheets on preserved Sprite2D; enemy four-fram
 Commits: `1ac0e93` player, `e62665b` enemy; lighting commit follows (use `git log -3 --oneline`). AV01–AV03 implemented with automated evidence; manual visual acceptance pending. Tests: actor 58, lighting 28, level 72 checks pass; smoke pass; editor TCP sandbox errors remain qualified in docs/08. Existing battery/patrol/save gaps remain unchanged. Enemy direction artwork is identical across supplied sheets; rotation is the intentional visual fallback. Pack has a flashlight item icon but no beam asset, so no decorative icon replaces functional lighting.
 
 Next action: manually play the level and check VX01–VX03, especially backwards sprite motion versus forward beam aim, cone range/readability, enemy facing and door shadows. No additional gameplay implementation, push or merge is authorized by this visual task.
+
+## Orientation correction handoff
+
+User explicitly authorizes vertical correction and one focused commit; no push/merge. Clean baseline `4bfb5a6` on main, branch `fix/invert-level-vertical`. OR01/LD07 implemented and automated checks pass; manual visual acceptance pending. Original image retained unchanged; docs/11 now records the approved bottom-start/top-exit transform, current room positions and object register separately from historical image analysis.
+
+Changes: explicit geometry rectangles and all 25 placed world-node coordinates reflected via y′=3328−y, player initial rotation set to 0 (forward up), upright Hall label bounds reflected; room labels generated within reflected rooms. Walls/colliders/occluders rebuilt by unchanged generator. No negative Y scale, moved screen UI, gameplay/AI rewrite or asset replacement. No navigation/patrol/custom camera limits exist; camera follow and unchanged bounds are preserved.
+
+Verification: 63 orientation + 72 level + 58 actor + 28 lighting checks pass; scene smoke passes. Editor import sandbox TCP errors remain; see docs/08 for exact commands and limitations. All existing door/key gating and pre-existing gameplay blockers remain unchanged. Next action: manual upward-route, art/UI/camera and shadow inspection. Commit ID in session report/`git log -1 --oneline`; no publication.

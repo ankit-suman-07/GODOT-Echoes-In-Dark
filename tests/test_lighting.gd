@@ -51,7 +51,7 @@ func _run() -> void:
 	Input.action_release("flashlight")
 	for actor_name in ["player", "enemy", "enemy_fire"]:
 		level.get_node(actor_name).set_physics_process(false)
-	player.position = Vector2(1713, 447)
+	player.position = Vector2(1713, 2881)
 	var door: Area2D = level.get_node("D08")
 	var shadow: LightOccluder2D = door.get_node("Shadow")
 	check(shadow.visible and shadow.occluder.polygon.size() == 4, "Closed door casts rectangular shadow")
