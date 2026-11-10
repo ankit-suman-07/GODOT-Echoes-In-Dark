@@ -12,7 +12,7 @@ Example audit prompt:
 
 ## Start implementation after approval
 
-This phase does not approve implementation. Resolve Q01 in docs/09, select the smallest ready task in docs/07, state requirement/check IDs, and implement only approved scope. Preserve existing movement/lights/camera/chase foundations. Engine load success is not gameplay acceptance. Commands and manual checklists are in docs/08.
+The current user instruction approves reference-level implementation and focused commits. Read the latest docs/09 handoff for implemented work and design blockers; older documentation-only instructions below are historical examples. Resolve Q01 in docs/09, select the smallest ready task in docs/07, state requirement/check IDs, and implement only approved scope. Preserve existing movement/lights/camera/chase foundations. Engine load success is not gameplay acceptance. Commands and manual checklists are in docs/08.
 
 Example approval prompt (send only when ready):
 
@@ -30,4 +30,4 @@ Verify progress by comparing requirements acceptance, task status, actual source
 
 > Review task [ID] against docs/05 and its docs/08 check IDs. Run available safe checks, report missing evidence and regressions, and update only documentation. Do not change gameplay.
 
-End every session with docs/09's handoff fields. No implementation continues after this documentation phase until approval is received.
+End every session with docs/09's handoff fields. Continue only within current authorization; do not push.

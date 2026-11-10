@@ -32,3 +32,7 @@ Out of scope per docs/01: combat, inventory, multiple enemies (conflicts with cu
 ## Spatial reference supplement
 
 The user-designated authoritative layout/object reference is `map/game_map.png`, interpreted in docs/11 with LD01–LD06 acceptance and LV01–LV06 verification. It fixes intended rooms/connections and marked positions, not working gameplay. Consult that register before level edits. Unresolved: third battery location versus summary count; keys for six red doors; final exit lock and southern Safe Room threshold; save-point marker versus existing no-save scope. Keep saves out of implementation until explicitly resolved; do not discard the marker or infer persistence. P05's layout question is now narrowed to scale, ambiguous thresholds and documented discrepancies rather than freely selecting a new layout.
+
+## Implementation trace update
+
+Original table status is the audit baseline. Current R04 key subset uses `scripts/exit_key.gd` + `scripts/level.gd`; R05 uses final `scenes/level_door.tscn` instance D09 and ExitTrigger. Geometry uses `scripts/level_geometry.gd`. E interaction, 144-unit range and grid calibration are routine implementation choices; player movement/camera/lights remain unchanged. R03/R09/S01 visuals alone do not implement their mechanics. R10 safety and R06 patrol remain pending decisions. The latest user instruction explicitly requests a save point, overriding the old no-save exclusion in principle; persistence/reset details remain unresolved. No extra key types or battery placement is inferred from asset availability.

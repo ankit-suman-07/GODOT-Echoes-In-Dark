@@ -1,6 +1,6 @@
 # Reference level design
 
-Status: intended layout documented; **not implemented**. Documentation-only review, 2026-11-09. The user designates [map/game_map.png](../map/game_map.png) authoritative for intended room layout, connections and marked object locations, despite its internal “MAP EXAMPLE” caption. Mechanics not specified by the image remain decisions, not inferred requirements.
+Status: structural geometry, basic doors/key/escape implemented; **full gameplay incomplete**. Original visual review: 2026-11-09. See implementation supplement below; original registers remain intended design. The user designates [map/game_map.png](../map/game_map.png) authoritative for intended room layout, connections and marked object locations, despite its internal “MAP EXAMPLE” caption. Mechanics not specified by the image remain decisions, not inferred requirements.
 
 Source image: 1402×1122 pixels; SHA-256 `89089e9ab5a4ab74a3fc954a0de798ecd3251ddc776e5ef99841734fd987f790`. Coordinates below are approximate image-pixel centers from top-left, x right/y down, generally within ~10 pixels. They are reference anchors, **not Godot world coordinates**, scale, tile size or collider dimensions. Legend/sidebar icons are excluded from counts. Preserve this image; approve any design departure explicitly.
 
@@ -114,3 +114,13 @@ LD IDs supplement docs/05, not implemented features. LV checks below are future 
 | LD06 — preserve baseline (R01–02, N02) | Movement, sprint, camera, lights, scene resources/signals retained; no incidental framework, save system or asset migration | LV06: scoped diff, V01–02 plus affected V03–06; record manual results separately from engine smoke |
 
 Implementation tasks and ordering are in docs/07. This review performed visual inspection, source/document comparison and documentation checks only; no runtime tests or level implementation.
+
+## Implementation supplement — `feat/reference-level`
+
+Image ×3 approximates world coordinates, snapped to a 32-unit floor grid (each cell corresponds to 10⅔ image pixels). `scripts/level_geometry.gd` records eight peripheral room rectangles, three joined Main Hall rectangles and ten connection rectangles. Boundary colliders/occluders derive from the union, preserving both upper side-room entrances; actor hitboxes unchanged. Minimum door span 128 units, 120 clear between wall faces. Geometry is constructed at runtime; the editor shows authored actors/doors/markers but generated floors/walls require Play/Remote inspection.
+
+`scenes/level.tscn` now places registered objects and doors; two confirmed batteries and all three notes are visual-only sprites, S01 is a terminal marker. No save behavior, third battery or extra keys were invented. Existing enemies remain direct-chase actors in Hall, without patrol/safety enforcement. Safe Room glow is visual, not a safety guarantee. These are explicit gaps, not completed requirements.
+
+D01/D08 can open/close via E. D02–D07 remain red/locked, awaiting LD-Q02. D09 now uses the exit key and an escape trigger as required by R05 and the user's implementation instruction; key is retained in session state. C01 has connected floor geometry with no door behavior; this does not resolve LD-Q03's door-type question. LD-Q01, LD-Q02, C01 semantics, safety/persistence and enemy navigation policy remain open. The user's save-point request authorizes that feature in principle, superseding the older exclusion, but session checkpoint versus persistent-save rules still need input.
+
+Automated subset evidence: docs/08; task states: docs/07. No manual map alignment, aesthetic or full player-input playthrough verified.
