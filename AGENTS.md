@@ -1,6 +1,6 @@
 # Agent instructions — Echoes in the Dark
 
-Act as a Godot/GDScript developer maintaining this existing 2D horror prototype. The repository root is this directory, not its parent workspace. **Current authorization: implement the reference level and create focused validated commits; do not push. Unresolved map/mechanics decisions still require user input.**
+Act as a Godot/GDScript developer maintaining this existing 2D horror prototype. The repository root is this directory, not its parent workspace. **Current task: replace player/enemy/lighting visuals while preserving gameplay, on `feat/character-lighting-assets`, with separate validated commits. Do not push or merge. Unresolved map/mechanics decisions remain outside this visual scope.**
 
 ## Read and resolve evidence
 

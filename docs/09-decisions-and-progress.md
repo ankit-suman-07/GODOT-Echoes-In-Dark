@@ -70,3 +70,13 @@ Validation: 72 engine-backed integration checks pass; main scene smoke passes. E
 Major blockers requiring user input (question sent during implementation): third battery location; six red-door key policy; Safe Room south door semantics; save checkpoint/persistence and safe/enemy boundary rules. Patrol/spawn/door access and battery values/note text also remain unspecified. Existing two enemies are retained and repositioned in Hall; no patrol exists to reuse. Final keyed exit follows explicit R05 without changing collectible gates. C01 is structural connected floor, not an approved door behavior. A full playable level is not claimed.
 
 Next: resolve these design choices, then finish L03–L05/T06–T08 and run full LV01–LV06. Do not add an arbitrary third battery or a save lifetime to bypass blockers. Commit identifiers are reported in the session response; inspect `git log -2 --oneline`. No push authorized.
+
+## Visual replacement handoff — 2026-11-09
+
+Scope: user authorized player/enemy/lighting replacements and separate focused commits, no push/merge. Dedicated branch `feat/character-lighting-assets` begins at `cd2c61c` on required level branch; working tree initially clean. No stale-main branch reset. Read docs/12 for audit/mapping and VX01–VX03 acceptance.
+
+Implemented: four player direction sheets on preserved Sprite2D; enemy four-frame sheet rotated toward velocity, warm fire variant; shared presentation script only reads actor state; locally authored soft SVG beam and native radial light mask replace all active legacy light textures; PointLight2D paths/toggle interface retained, beam source follows body near muzzle, soft wall/closed-door shadows. `door_shadow.gd` reads door state and never changes gameplay. No player/AI/session/door/geometry script or project configuration edits; colliders/detection signals unchanged.
+
+Commits: `1ac0e93` player, `e62665b` enemy; lighting commit follows (use `git log -3 --oneline`). AV01–AV03 implemented with automated evidence; manual visual acceptance pending. Tests: actor 58, lighting 28, level 72 checks pass; smoke pass; editor TCP sandbox errors remain qualified in docs/08. Existing battery/patrol/save gaps remain unchanged. Enemy direction artwork is identical across supplied sheets; rotation is the intentional visual fallback. Pack has a flashlight item icon but no beam asset, so no decorative icon replaces functional lighting.
+
+Next action: manually play the level and check VX01–VX03, especially backwards sprite motion versus forward beam aim, cone range/readability, enemy facing and door shadows. No additional gameplay implementation, push or merge is authorized by this visual task.

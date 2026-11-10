@@ -52,3 +52,15 @@ Baseline `1015c12`, branch `feat/reference-level`. This is a usable geometry/int
 | L06 / T10 | 72 automated checks pass for the implemented subset; full level/gameplay/release acceptance blocked. No manual/visual/export verification. |
 
 Next decision input: third battery location, side-door key assignment, C01 door semantics, save persistence and safety/enemy access. User requested a save point, superseding the old blanket no-save exclusion, but did not define save data/lifetime. Continue dependent systems only when clarified; no working save is claimed.
+
+## Actor and lighting asset task — `feat/character-lighting-assets`
+
+User-approved visual-only scope, based on `cd2c61c` from `feat/reference-level` (required dependency retained). No level redesign or pending gameplay decision was resolved by this work. Asset mapping, limitations and acceptance are in docs/12.
+
+| Task | Status | Acceptance / evidence / remaining checks |
+| --- | --- | --- |
+| AV01 — player art | Implemented; automated checks pass | VX01: four directional 128×32 sheets, 32×32 frames at 2×; original Sprite2D path, player controller/collider/camera intact. Manual V02/VX01 pending. Player commit `1ac0e93`. |
+| AV02 — enemy art | Implemented; automated checks pass | VX02: shared four-frame sheet at 2.5×, movement-facing rotation (supplied direction sheets identical), warm fire tint; AI/detection/collision unchanged. Manual VX02 pending. Enemy commit `e62665b`. |
+| AV03 — functional light visuals | Implemented; automated checks pass | VX03: soft forward cone, native radial glow, inherited aim and soft wall/door shadows; no toggle/charge mechanics change. 28 lighting + 58 actor + 72 level checks pass. Rendered VX03/manual V02 checks pending. |
+
+These task statuses do not mark manual visual acceptance, T06 patrol or T07 battery mechanics complete. No push/merge authorized.
