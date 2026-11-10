@@ -1,9 +1,14 @@
 [gd_scene format=3 uid="uid://c445uy5isoi51"]
 
 [ext_resource type="Script" uid="uid://kvi7hmdtwg6v" path="res://scripts/player.gd" id="1_3vyb7"]
-[ext_resource type="Texture2D" uid="uid://b3ybyxsaov8tl" path="res://icon.svg" id="2_g2els"]
-[ext_resource type="Texture2D" uid="uid://dga3ps08i80fk" path="res://assets/lights/3.png" id="3_qhqgy"]
-[ext_resource type="Texture2D" uid="uid://dp28vjb0dajpm" path="res://assets/lights/2.png" id="4_dqkch"]
+[ext_resource type="Texture2D" path="res://assets/echoes_assets/characters/player_up.svg" id="2_g2els"]
+[ext_resource type="Texture2D" path="res://resources/lighting/flashlight_beam.svg" id="3_qhqgy"]
+[ext_resource type="Texture2D" path="res://resources/lighting/radial_glow.tres" id="4_dqkch"]
+
+[ext_resource type="Script" path="res://scripts/actor_visual.gd" id="5_visual"]
+[ext_resource type="Texture2D" path="res://assets/echoes_assets/characters/player_down.svg" id="6_down"]
+[ext_resource type="Texture2D" path="res://assets/echoes_assets/characters/player_left.svg" id="6_left"]
+[ext_resource type="Texture2D" path="res://assets/echoes_assets/characters/player_right.svg" id="6_right"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qhqgy"]
 radius = 5.3333335
@@ -13,17 +18,26 @@ rotation = 1.5707964
 script = ExtResource("1_3vyb7")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1119894550]
-position = Vector2(0.6683521, -0.35734606)
-scale = Vector2(0.6, 0.6)
+position = Vector2(0, 0)
+scale = Vector2(2, 2)
 texture = ExtResource("2_g2els")
+hframes = 4
+script = ExtResource("5_visual")
+up_sheet = ExtResource("2_g2els")
+down_sheet = ExtResource("6_down")
+left_sheet = ExtResource("6_left")
+right_sheet = ExtResource("6_right")
+idle_follows_body = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1789951592]
 scale = Vector2(6, 6)
 shape = SubResource("CircleShape2D_qhqgy")
 
 [node name="flashlight" type="PointLight2D" parent="." unique_id=131714179]
-position = Vector2(-1.0490739e-05, -240)
-rotation = 3.1415927
+shadow_enabled = true
+shadow_filter = 1
+position = Vector2(0, -24)
+offset = Vector2(0, -244)
 scale = Vector2(0.8, 0.8)
 enabled = false
 color = Color(0.9564424, 0.832268, 0.6793663, 1)
@@ -31,6 +45,8 @@ energy = 2.0
 texture = ExtResource("3_qhqgy")
 
 [node name="light_all_around" type="PointLight2D" parent="." unique_id=1946339389]
+shadow_enabled = true
+shadow_filter = 1
 position = Vector2(1.349781, 7.6293945e-06)
 scale = Vector2(0.4, 0.4)
 enabled = false

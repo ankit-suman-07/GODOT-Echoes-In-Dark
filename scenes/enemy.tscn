@@ -1,7 +1,9 @@
 [gd_scene format=3 uid="uid://db82x2h61bich"]
 
-[ext_resource type="Texture2D" uid="uid://dvgi4rmvl1hn0" path="res://sprites/enemy/enemy_ghost.png" id="1_7p1mj"]
+[ext_resource type="Texture2D" path="res://assets/echoes_assets/characters/enemy_down.svg" id="1_7p1mj"]
 [ext_resource type="Script" uid="uid://bquda0kvjkibg" path="res://scripts/enemy.gd" id="1_md0e3"]
+
+[ext_resource type="Script" path="res://scripts/actor_visual.gd" id="visual_script"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_md0e3"]
 size = Vector2(80, 80)
@@ -12,10 +14,13 @@ radius = 304.42078
 [node name="enemy" type="CharacterBody2D" unique_id=723888187]
 script = ExtResource("1_md0e3")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1057487227]
-position = Vector2(0, -1.9073486e-06)
-scale = Vector2(0.6, 0.6)
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(2.5, 2.5)
 texture = ExtResource("1_7p1mj")
+hframes = 4
+script = ExtResource("visual_script")
+down_sheet = ExtResource("1_7p1mj")
+rotate_to_motion = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=690220881]
 shape = SubResource("RectangleShape2D_md0e3")

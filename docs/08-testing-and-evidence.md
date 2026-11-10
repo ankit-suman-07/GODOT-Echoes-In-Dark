@@ -83,3 +83,24 @@ git diff --check
 - Main-scene bounded runtime smoke: exit 0, no errors reported. Resource path/static whitespace checks pass; original player/enemy scripts and player/camera scene remain unchanged.
 
 Limitations: tests temporarily disable barriers to measure structural clearances; this does not prove side rooms are reachable with unresolved locked-door keys. No safe behavior, patrol, battery depletion/recharge, note reading, save persistence, catch/loss, pause/menu or exports tested because these are not implemented. Fresh scene instantiation reset is tested; R keyboard reload still needs a manual check. Headless physics is not a visual check or complete player-input playthrough. Manual LV01–LV06/V02–V07 remain pending for the implemented subset; full acceptance remains blocked by docs/11 decisions.
+
+## Character and lighting asset evidence — 2026-11-09
+
+Baseline `cd2c61c`, clean tree, branch `feat/character-lighting-assets` from required `feat/reference-level`. Engine `4.7.2.stable.official.ed1daf0bf`. Environment: temporary `XDG_DATA_HOME=/tmp/echoes-visual-data`, `XDG_CONFIG_HOME=/tmp/echoes-visual-config`, `XDG_CACHE_HOME=/tmp/echoes-visual-cache`.
+
+Commands from repository root (each test/smoke bounded with `timeout 30`):
+
+```bash
+/home/ankitsuman/Applications/Godot/godot --headless --path . --editor --quit
+/home/ankitsuman/Applications/Godot/godot --headless --path . --script res://tests/test_actor_visuals.gd
+/home/ankitsuman/Applications/Godot/godot --headless --path . --script res://tests/test_lighting.gd
+/home/ankitsuman/Applications/Godot/godot --headless --path . --script res://tests/test_level.gd
+/home/ankitsuman/Applications/Godot/godot --headless --path . --quit-after 120
+git diff --check
+```
+
+Results: actor suite **58/58**, lighting suite **28/28**, existing level suite **72/72**, all exit 0. Smoke exit 0 with no errors. Import exit 0 still emits restricted editor TCP listener errors; no script/resource/texture failures. Static resource path validation passes; original gameplay scripts and project configuration byte-identical to baseline, actor collider resource/node blocks, detection areas and signal connections unchanged. No active scene references to legacy actor PNGs or `assets/lights/` textures; application icon intentionally retained.
+
+Test harness corrections during development: frame wrapping legitimately returns frame 0 during movement, so animation checks assert progression rather than nonzero frame; native gradient textures cannot return rendered image pixels under the dummy headless renderer, so the radial check samples its CPU Gradient instead. Approximate comparison is used for float energy values. The stalled initial lighting test was interrupted; bounded reruns pass. These corrections do not establish rendered shadow/gradient quality.
+
+Manual VX01–VX03 (docs/12), V02 and relevant V05 remain pending: sprite facing/alignment, diagonal/backwards motion, sprint cadence, camera, visual light range/readability, rendered wall/door shadows and chase appearance. No gameplay/visual pass is inferred from import or headless checks. No battery or patrol test is claimed: those mechanics do not exist in current source and were outside this task.
