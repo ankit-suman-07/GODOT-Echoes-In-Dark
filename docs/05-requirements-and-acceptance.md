@@ -36,3 +36,7 @@ The user-designated authoritative layout/object reference is `map/game_map.png`,
 ## Implementation trace update
 
 Original table status is the audit baseline. Current R04 key subset uses `scripts/exit_key.gd` + `scripts/level.gd`; R05 uses final `scenes/level_door.tscn` instance D09 and ExitTrigger. Geometry uses `scripts/level_geometry.gd`. E interaction, 144-unit range and grid calibration are routine implementation choices; player movement/camera/lights remain unchanged. R03/R09/S01 visuals alone do not implement their mechanics. R10 safety and R06 patrol remain pending decisions. The latest user instruction explicitly requests a save point, overriding the old no-save exclusion in principle; persistence/reset details remain unresolved. No extra key types or battery placement is inferred from asset availability.
+
+## Approved orientation correction
+
+LD07 in docs/11 supersedes the original map’s top-start orientation: Security/player at bottom, Exit at top, upward progression, identical topology and door/key rules. Reflect geometry and placements with `(x, y) → (x, 3328 − y)`; keep visuals/UI upright and existing controller mechanics. Automated evidence: `tests/test_level_orientation.gd` and docs/08. No missing gameplay feature is added by this correction.

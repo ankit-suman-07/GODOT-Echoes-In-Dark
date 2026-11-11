@@ -28,13 +28,13 @@ func _run() -> void:
 		level.get_node(actor_name).set_physics_process(false)
 	check(geometry.ROOM_RECTS.size() == 8, "Eight peripheral rooms plus Main Hall required")
 	check(geometry.CONNECTIONS.size() == 10, "Every map connection must be represented")
-	check(player.position.distance_to(Vector2(1713, 447)) < 1, "Security spawn")
+	check(player.position.distance_to(Vector2(1713, 2881)) < 1, "Security spawn")
 	check(not player.get_node("flashlight").enabled, "Flashlight starts off")
 	check(not player.get_node("light_all_around").enabled, "Round light starts off")
 	check(InputMap.action_has_event("interact", _interaction_event()), "E interaction binding")
 	# Verify the entire structural floor graph is connected, including both upper room doors.
 	var cells: Dictionary = geometry.floor_cells
-	var pending: Array[Vector2i] = [Vector2i(53, 14)]
+	var pending: Array[Vector2i] = [Vector2i(53, 89)]
 	var seen := {}
 	while not pending.is_empty():
 		var cell: Vector2i = pending.pop_back()
@@ -69,7 +69,7 @@ func _run() -> void:
 			await physics_frame
 			door.interact()
 			check(door.is_open, id + " refuses close on actor")
-			player.position = Vector2(1713, 447)
+			player.position = Vector2(1713, 2881)
 			await physics_frame
 			door.interact()
 			await physics_frame
@@ -88,13 +88,13 @@ func _run() -> void:
 		if id == "D01": normal = Vector2.DOWN
 		if id == "D03" or id == "D05": normal = Vector2.DOWN
 		check(not _blocked(center - normal * 64, normal * 128, enemy_shape), id + " fits existing enemy shape when open")
-	check(_blocked(Vector2(1450, 150), Vector2(0, -120), body_shape), "Security north wall contains player")
-	check(_blocked(Vector2(900, 1080), Vector2(0, 220), body_shape), "Storage south wall has no unmarked shortcut")
+	check(_blocked(Vector2(1450, 3178), Vector2(0, 120), body_shape), "Security south wall contains player")
+	check(_blocked(Vector2(900, 2248), Vector2(0, -220), body_shape), "Storage north wall has no unmarked shortcut")
 	# Interaction selection and occlusion: proximity alone must not reach through walls.
-	player.position = Vector2(951, 1120)
+	player.position = Vector2(951, 2208)
 	level._physics_process(0.016)
 	check(level.focused == null, "No interactables in empty part of Storage")
-	player.position = Vector2(2100, 2550)
+	player.position = Vector2(2100, 778)
 	level._physics_process(0.016)
 	check(level.focused == level.get_node("key"), "Nearby key selected")
 	level._on_exit_entered(player)
