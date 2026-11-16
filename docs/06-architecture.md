@@ -65,3 +65,9 @@ Both existing enemy scripts retain separate overlap callbacks and local player_c
 ## EA02 chase stopping clearance
 
 Both enemy scripts retain detection/target/fire-light state and move_and_slide. While detected, remaining travel is target center distance minus stopping_distance (default 96); velocity is zero within 0.01 of that threshold, otherwise capped at min(SPEED, remaining / delta). This clears the player radius 32 plus the enemy rectangle's half diagonal (~56.57), leaving ~7.4 units at the worst angle. No collision masks, player controller or scene changes. Player_chase continues to represent detection even when proximity stops motion; target exit still clears it.
+
+## PC01 control supplement
+
+player.gd reuses left/right/forward/back via Input.get_vector for world-axis movement and bounded diagonals; existing SPEED assignment remains 200/500. get_global_mouse_position minus body global position drives global_rotation with +PI/2 for the authored -Y beam. Zero aim vector retains rotation. Existing child PointLight2D transforms/resources and default Camera2D.ignore_rotation=true remain. Legacy exported TURN_SPEED is retained for serialized compatibility, unused by immediate mouse aim. No InputMap or node-path changes.
+
+actor_visual.gd adds optional facing_follows_body (false by default); only player.tscn enables it. Cardinal sheets follow body aim while movement velocity still drives animation cadence. Enemy rotate_to_motion behavior stays unchanged. Interactions use distance/occlusion, independent of facing. Historical tank-control descriptions above are superseded by PC01.

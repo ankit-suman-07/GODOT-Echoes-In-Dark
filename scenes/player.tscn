@@ -28,6 +28,7 @@ down_sheet = ExtResource("6_down")
 left_sheet = ExtResource("6_left")
 right_sheet = ExtResource("6_right")
 idle_follows_body = true
+facing_follows_body = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1789951592]
 scale = Vector2(6, 6)

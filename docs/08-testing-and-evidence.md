@@ -163,3 +163,29 @@ Preserved prior EA01/EA02 dirty tree on feat/enemies-update (7250348). Installed
 Concrete defect found: project.godot interact event has device 16; device-0 KEY_E fails InputMap.event_is_action while W/F pass. Setting interact device to -1 repairs event matching. /tmp/echoes_interaction_probe.gd confirms a device-0 physical E event delivered through Input.parse_input_event opens D01 from 90 units away. Added both mapping and real input-path regression to tests/test_level.gd. Command with existing isolated XDG environment: timeout 30 /home/ankitsuman/Applications/Godot/godot --headless --path . --script res://tests/test_level.gd → 75 checks, 0 failures, exit 0.
 
 This repairs E but does not establish the cause of the user-reported all-key/editor freeze. User launches with Play and sees no start/pickup prompt. Level has no start prompt and begins with both lights off. Awaiting focus/flashlight/movement test in the failing editor launch; no speculative renderer/controller changes.
+
+## PC01 controls evidence — 2026-11-15
+
+Baseline 6ca9c74 (merged enemy PR #5), initially clean main; fetch and ff-only pull confirmed latest origin/main, feature branch feat/wasd-mouse-controls created at that exact commit. Godot 4.7.2.stable.official.ed1daf0bf. Environment XDG_DATA_HOME=/tmp/echoes-controls-data, XDG_CONFIG_HOME=/tmp/echoes-controls-config, XDG_CACHE_HOME=/tmp/echoes-controls-cache.
+
+Commands from repository root:
+
+```bash
+timeout 30 /home/ankitsuman/Applications/Godot/godot --headless --path . --editor --quit
+timeout 30 /home/ankitsuman/Applications/Godot/godot --headless --path . --script res://tests/test_player_controls.gd
+timeout 55 /home/ankitsuman/Applications/Godot/godot --headless --path . --script res://tests/test_enemies.gd
+timeout 30 /home/ankitsuman/Applications/Godot/godot --headless --path . --script res://tests/test_level.gd
+timeout 30 /home/ankitsuman/Applications/Godot/godot --headless --path . --script res://tests/test_actor_visuals.gd
+timeout 30 /home/ankitsuman/Applications/Godot/godot --headless --path . --script res://tests/test_lighting.gd
+timeout 30 /home/ankitsuman/Applications/Godot/godot --headless --path . --script res://tests/test_level_orientation.gd
+timeout 30 /home/ankitsuman/Applications/Godot/godot --headless --path . --quit-after 120
+git diff --check
+```
+
+All six suites exit 0: controls 41, enemies 53, level 75, visuals 58, lighting 28, orientation 63; **318 checks, zero failures**. Main-scene smoke exit 0, no errors. Sandbox editor import exit 0 with TCP listener errors; rerun outside sandbox exit 0 with no reported errors, confirming that restriction. No script/resource import failures.
+
+Controls suite injects physical device-0 WASD/arrows, diagonal combinations, opposite keys and Shift; flushes buffered keyboard events before synchronous ticks. Verifies 200/500 speeds, world-axis motion despite differing facing, zero-vector aim, flashlight direction/emitter, upright camera view, idle aim artwork and F/Space toggles. Dummy headless DisplayServer cannot move an OS cursor; aim checks position the actor relative to the actual viewport mouse query. This exercises runtime aiming math without claiming physical mouse motion or input-focus acceptance. Early harness failures came from buffered events and immovable dummy cursor; corrected harness passes without changing runtime aiming.
+
+Existing actor suite now checks aim-facing art while moving opposite. Enemy wall-block fixture uses right (rather than turn + forward); all independent chase/exit, stop-distance, deletion and wall-escape assertions pass. Orientation suite preserves reflection/connectivity while checking mouse-facing instead of initial fixed-up facing. Level suite retains real E event/door, key/exit/reset and collision checks. No gameplay scripts for enemies/geometry/interactions changed.
+
+Manual pending: focus game view first; WASD/arrows and diagonal sprint feel, mouse aim at all angles while strafing/backing, animation/readability, camera behavior, F/Space and rendered shadows, E door/key, enemy wall/corner/crowd escapes and complete key-to-exit/R restart. No manual gameplay or graphical acceptance performed in PC01. Earlier apparent launch freeze was confirmed by user as missing game-view keyboard focus; no engine/controller workaround added.

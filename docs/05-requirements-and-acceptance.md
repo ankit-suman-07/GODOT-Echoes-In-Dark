@@ -52,3 +52,7 @@ User-approved R01/R06 preservation fix: existing enemies stop moving inside expo
 ## IN01 — keyboard interaction repair (2026-11-15)
 
 R04/V03: physical E from keyboard device 0 must match interact and reach the existing unhandled-input door interaction. Bind interact to all devices (-1), consistent with existing movement/light bindings; no key or gameplay-policy change. Broader reported editor launch/input freeze remains under investigation.
+
+## PC01 — approved WASD and mouse controls (2026-11-15)
+
+The current user explicitly replaces R01's tank-control acceptance: W/Up north, S/Down south, A/Left west, D/Right east, normalized diagonal movement independent of mouse facing; walk 200/sprint 500 unchanged. Mouse aims the body, player directional artwork and flashlight; camera view stays upright. E interaction and F/Space dual-light toggles, colliders, progression and enemy behavior remain unchanged. Opposite movement inputs cancel through Input.get_vector. Supersedes historical tank/back-over-forward policies only. V02/VX01 automation: tests/test_player_controls.gd; retain V03–05 and lighting/orientation regressions. Rendered feel and full gameplay checks remain manual.
