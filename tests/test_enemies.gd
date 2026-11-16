@@ -119,11 +119,11 @@ func _run() -> void:
 		Input.action_release("forward")
 		check(player.position.y < start.y - 190, "Player can walk along wall to escape")
 		player.rotation = PI / 2
-		Input.action_press("forward")
+		Input.action_press("right")
 		for tick in range(15):
 			player._physics_process(1.0 / 60.0)
 			await physics_frame
-		Input.action_release("forward")
+		Input.action_release("right")
 		check(player.position.x <= wall.position.x - 41.9, "Wall still blocks player")
 		player.rotation = 0.0
 		enemy.position = wall.position + Vector2(150, -200)

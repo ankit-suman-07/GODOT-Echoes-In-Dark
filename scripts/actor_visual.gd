@@ -5,6 +5,7 @@ extends Sprite2D
 @export var left_sheet: Texture2D
 @export var right_sheet: Texture2D
 @export var idle_follows_body := false
+@export var facing_follows_body := false
 @export var rotate_to_motion := false
 @export var frames_per_second := 6.0
 var animation_time := 0.0
@@ -20,14 +21,14 @@ func _process(delta: float) -> void:
 func update_visual(delta: float) -> void:
 	var moving := actor.is_physics_processing() and actor.velocity.length_squared() > 1.0
 	var direction := actor.velocity.normalized() if moving else Vector2.ZERO
-	if not moving and idle_follows_body:
+	if facing_follows_body or (not moving and idle_follows_body):
 		direction = -actor.global_transform.y.normalized()
 	if rotate_to_motion:
 		texture = down_sheet
 		if moving:
 			global_rotation = direction.angle() - PI / 2.0
 	else:
-		# Keep cardinal artwork upright despite the tank controller rotating its body.
+		# Keep cardinal artwork upright while the actor body rotates.
 		global_rotation = 0.0
 		if not direction.is_zero_approx():
 			if absf(direction.x) > absf(direction.y):

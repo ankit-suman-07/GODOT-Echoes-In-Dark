@@ -34,3 +34,7 @@ No beam texture was supplied, so the new cone is a small authored SVG with layer
 | VX03 | Real PointLight2D nodes use new textures, source/direction follow body, injected input toggles both player lights, gradient boundaries and door occlusion states correct. `tests/test_lighting.gd` | Rendered beam aim, softness/range/readability, wall shadows and opening/closing door shadows in light/dark areas |
 
 No manual visual or full gameplay playthrough was performed; headless tests verify resources/state/geometry, not rendered aesthetics. Existing missing patrol/battery/save mechanics remain unchanged, as recorded in docs/07 and docs/09.
+
+## PC01 aim-facing supplement
+
+Current user-approved control feature supersedes the player's movement-facing/backwards-art choice above. Player Sprite2D enables facing_follows_body; cardinal art follows mouse-driven body aim during both motion and idle. Existing frame crops, upright transforms, cadence and animation stop remain; enemy presentation is unchanged. The real -Y PointLight2D beam inherits mouse-facing body rotation with the same source, range, energy, texture, toggle and shadows. Automated actor/controls/lighting suites pass; manual strafe/backwards aim, cardinal transitions, diagonal beam alignment and rendered shadows remain pending.

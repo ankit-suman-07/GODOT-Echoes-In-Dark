@@ -73,7 +73,7 @@ func _run() -> void:
 	check(security.position.y > exit_room.end.y, "Security bottom, Exit top")
 	check(security.has_point(Vector2i((start / 32).floor())), "Player inside bottom Security Room")
 	check(exit_room.has_point(Vector2i((level.get_node("ExitTrigger").position / 32).floor())), "Exit trigger inside top Exit")
-	check(is_zero_approx(player.rotation), "Player initially faces screen up")
+	check((-player.global_transform.y).normalized().dot((player.get_global_mouse_position() - player.global_position).normalized()) > 0.999, "Player initially faces mouse in reflected level")
 	var positive_transforms := true
 	for node in level.find_children("*", "Node2D", true, false):
 		positive_transforms = positive_transforms and node.transform.determinant() > 0
@@ -85,7 +85,7 @@ func _run() -> void:
 	check(camera.limit_top == -10000000 and camera.limit_bottom == 10000000, "Existing unrestricted camera limits retained")
 	check(level.get_node("MainHallLabel").get_rect() == Rect2(1632, 1708, 218, 36), "Hall label rectangle mirrored without flipping text")
 	check(level.get_node("prompt/Label").offset_top == 40, "Screen-space prompt not moved with world")
-	# Actual controller input: initial W/up forward goes north; S/down goes south.
+	# World-axis W/up moves north and S/down moves south regardless of mouse aim.
 	Input.action_press("forward")
 	await physics_frame
 	await physics_frame

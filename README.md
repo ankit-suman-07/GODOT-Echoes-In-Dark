@@ -38,16 +38,17 @@ Replace `godot` with your executable path if necessary. Export presets and packa
 
 | Input | Action |
 | --- | --- |
-| W / Up | Move forward along the player's facing |
-| S / Down | Move backward |
-| A / Left | Turn left |
-| D / Right | Turn right |
+| W / Up | Move up |
+| S / Down | Move down |
+| A / Left | Move left |
+| D / Right | Move right |
+| Mouse | Face and aim the flashlight |
 | Shift | Sprint |
 | F / Space | Toggle flashlight and surrounding light |
 | E | Interact with a nearby door or exit key |
 | R | Restart after escaping |
 
-Left/right turn the player rather than strafe. The flashlight follows body facing; movement artwork follows travel direction when backing up.
+Movement is independent of aim, with normalized diagonals. Player artwork and the flashlight face the mouse while moving or standing still. Click inside the game view to give it keyboard focus.
 
 ## Incomplete systems and known limitations
 

@@ -24,14 +24,15 @@ func _run() -> void:
 	check(is_equal_approx(player.get_node("CollisionShape2D").shape.radius, 5.3333335), "Player shape unchanged")
 	check(player.get_node("CollisionShape2D").scale == Vector2(6, 6), "Player collider scaling unchanged")
 	for direction in [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]:
-		player.velocity = direction * 200
+		player.velocity = -direction * 200
+		player.global_rotation = direction.angle() + PI / 2.0
 		var before := player.transform
 		var previous_frame := visual.frame
 		visual.update_visual(0.2)
 		var expected: Texture2D = visual.up_sheet if direction == Vector2.UP else visual.down_sheet
 		if direction == Vector2.LEFT: expected = visual.left_sheet
 		if direction == Vector2.RIGHT: expected = visual.right_sheet
-		check(visual.texture == expected, "Correct player sheet: " + str(direction))
+		check(visual.texture == expected, "Player sheet follows aim while moving opposite: " + str(direction))
 		check(player.transform == before, "Visual does not rotate or move body")
 		check(visual.frame != previous_frame and visual.frame < 4, "Moving player animates")
 	player.velocity = Vector2.ZERO

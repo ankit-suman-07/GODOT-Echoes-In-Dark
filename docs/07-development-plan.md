@@ -82,3 +82,7 @@ Implemented; manual encounter/crowding checks pending. Extend EA01's existing en
 ## IN01 — keyboard-device binding repair
 
 Implemented with automated evidence: interact was restricted to device 16 and rejected normal keyboard E (device 0). Set device -1; tests/test_level.gd checks the physical event mapping and actual Input.parse_input_event delivery to open D01. 75/75 checks pass. Full reported editor freeze not yet reproduced/resolved; do not mark launch issue complete.
+
+## PC01 — eight-directional movement and mouse aiming
+
+User-authorized feature on feat/wasd-mouse-controls from latest origin/main 6ca9c74, including merged enemy PR #5. Implemented; all 318 automated checks pass, manual V02/VX01/VX03 and full-route playthrough pending. R01 policy explicitly updated in docs/05. Scope: player controller, optional body-facing sprite presentation, one player scene property, focused input suite, three dependent test fixtures, README/docs. No enemy/geometry/light/interaction changes. User authorizes commit, push and PR to main; no merge. Current evidence/handoff: docs/08–09.
