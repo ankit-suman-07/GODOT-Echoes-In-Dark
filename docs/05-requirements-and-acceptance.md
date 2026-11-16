@@ -40,3 +40,15 @@ Original table status is the audit baseline. Current R04 key subset uses `script
 ## Approved orientation correction
 
 LD07 in docs/11 supersedes the original map’s top-start orientation: Security/player at bottom, Exit at top, upward progression, identical topology and door/key rules. Reflect geometry and placements with `(x, y) → (x, 3328 − y)`; keep visuals/UI upright and existing controller mechanics. Automated evidence: `tests/test_level_orientation.gd` and docs/08. No missing gameplay feature is added by this correction.
+
+## EA01 — approved proximity-enemy extension (2026-11-15)
+
+Current user scope supersedes the legacy multiple-enemy exclusion: three independent existing-scene enemies, exported chase SPEED 150 (below unchanged player walk 200/sprint 500), configurable detection_radius default 250. Reuse overlap chase/idle and fire-light callbacks; safely clear invalid/deleted targets. Acceptance: actual physics entry/exit independently starts/stops chase, walking escapes in open space, per-instance radius resources remain independent, and completion stops all three. V05 subset via tests/test_enemies.gd plus V00–04 regressions. This approves no patrol, LOS, catch/loss or safety policy; full R06/R07 remain pending. Area overlap includes the player's collider, so entry is not an exact center-distance threshold.
+
+## EA02 — prevent continuous enemy contact (2026-11-15)
+
+User-approved R01/R06 preservation fix: existing enemies stop moving inside exported stopping_distance (default/minimum Inspector value 96 world units center-to-center); movement steps cannot overshoot the gap. Keep detection 250, chase speed 150, player 200/500, all collision layers/shapes and boundaries. V05 subset acceptance: real wall encounter leaves clearance, walking parallel to wall remains responsive, both actors still collide with wall, close player approach causes no enemy pursuit motion. Manual corner/crowd acceptance pending.
+
+## IN01 — keyboard interaction repair (2026-11-15)
+
+R04/V03: physical E from keyboard device 0 must match interact and reach the existing unhandled-input door interaction. Bind interact to all devices (-1), consistent with existing movement/light bindings; no key or gameplay-policy change. Broader reported editor launch/input freeze remains under investigation.

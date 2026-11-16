@@ -49,7 +49,7 @@ func _run() -> void:
 	await physics_frame
 	check(not beam.enabled and not halo.enabled, "Controller toggles both lights off")
 	Input.action_release("flashlight")
-	for actor_name in ["player", "enemy", "enemy_fire"]:
+	for actor_name in ["player", "enemy", "enemy_fire", "enemy_2"]:
 		level.get_node(actor_name).set_physics_process(false)
 	player.position = Vector2(1713, 2881)
 	var door: Area2D = level.get_node("D08")

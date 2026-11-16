@@ -123,3 +123,43 @@ Results: orientation **63/63**, level **72/72**, actor **58/58**, lighting **28/
 New orientation regression checks inverse-reflected runtime floor and wall signatures against pre-correction geometry (all 3640 cells and 710 colliders), all 25 placed world positions, spawn/exit containment, upright transforms/labels/UI, follow-camera configuration, injected upward/downward input at initial facing, structural door-gated reachability to corridor key/top Exit, and existing chase callbacks/motion at mirrored spawns. Existing tests retain body-shape casts, key/completion/reset and flashlight/shadow state coverage, with old absolute coordinates reflected. No patrol or navigation verification is claimed: these systems are absent. Locked side rooms remain locked exactly as before; tests do not invent a key policy.
 
 The first new test run used a Node2D-style property on a Control label; the test harness was corrected to `get_global_transform()` and rerun successfully. No game logic change was needed. Static resource checks, baseline-preservation review and `git diff --check` pass. Manual checks pending: upward full-route playthrough/restart, readable upright art/text, camera framing, rendered flashlight/door/wall shadows and chase appearance. Headless validation alone does not prove visual or full gameplay acceptance.
+
+## EA01 enemy extension evidence — 2026-11-15
+
+Baseline 7250348, initially clean feat/enemies-update, installed Godot 4.7.2.stable.official.ed1daf0bf. V00/V01 and V02–05 automated subsets only. Commands from root with XDG_DATA_HOME=/tmp/echoes-enemy-data, XDG_CONFIG_HOME=/tmp/echoes-enemy-config, XDG_CACHE_HOME=/tmp/echoes-enemy-cache:
+
+```bash
+timeout 45 /home/ankitsuman/Applications/Godot/godot --headless --path . --editor --quit
+timeout 40 /home/ankitsuman/Applications/Godot/godot --headless --path . --script res://tests/test_enemies.gd
+```
+
+Same test command used for test_level.gd, test_actor_visuals.gd, test_lighting.gd and test_level_orientation.gd. Results: enemy 32/32, level 72/72, actor 58/58, lighting 28/28, orientation 63/63; all exit 0, no runtime errors. Enemy suite tests actual physics overlaps, independent idle/chase/exit, per-instance shape/radius isolation, walking escape from all three, unchanged input speeds, deleted targets, floor-contained level spawns and completion stopping every enemy. Existing suites freeze/include the third instance in actor exclusions where needed.
+
+Initial enemy escape checks failed because standalone player facing differed from the level override and the test duration was insufficient for radius 350. Harness now explicitly faces up and runs 330 ticks per escape; corrected suite passes without player changes. Import exit 0 with known restricted editor TCP socket/listen errors; no script/resource errors, not an error-free editor pass. No rendered/manual testing performed. Manual V02–05/VX02 pending, particularly Hall crowding, doors, chase appearance, camera/light and full key/escape/restart. Existing absent patrol/LOS/catch/safety remain outside this scope.
+
+EA01 final review: bounded main-scene `--headless --path . --quit-after 120` (timeout 30, same XDG environment) exit 0, no errors. Full scoped diff reviewed; `git diff --check` passes. No unrelated import-sidecar or game-system changes.
+
+## EA02 wall-contact regression — 2026-11-15
+
+Baseline 7250348 plus preserved uncommitted EA01 work on feat/enemies-update, Godot 4.7.2.stable.official.ed1daf0bf. Source cause: both solid actors use default layer/mask 1 and enemies unconditionally request SPEED toward the player's center while detected, including during contact. Player tank movement offers no lateral strafe, so continued contact removes maneuvering space at walls. A new real-wall test against pre-fix enemy scripts failed clearance and sustained-contact assertions for all three enemies (47 checks, 6 failures). The simple straight-wall setup still permitted parallel escape before the fix: a complete intermittent gameplay lockup was not reproduced or claimed.
+
+Fix uses 96 center-distance clearance, exceeding 32 + sqrt(40²+40²), and caps each approach step; collision masks/shapes remain unchanged. Modified enemy suite exercises each of three enemies approaching a player against a wall, zero motion/contact once stopped, input-driven parallel escape, player/enemy wall blocking, oversized diagonal step and player entry inside the gap, alongside EA01 physics entry/exit, independent instances, target deletion and walking escape.
+
+Commands from repository root with XDG_DATA_HOME=/tmp/echoes-enemy-data, XDG_CONFIG_HOME=/tmp/echoes-enemy-config, XDG_CACHE_HOME=/tmp/echoes-enemy-cache:
+
+```bash
+timeout 30 /home/ankitsuman/Applications/Godot/godot --headless --path . --editor --quit
+timeout 55 /home/ankitsuman/Applications/Godot/godot --headless --path . --script res://tests/test_enemies.gd
+```
+
+Existing test_level.gd, test_actor_visuals.gd, test_lighting.gd and test_level_orientation.gd ran with the same script command/environment. Results: level 72/72, actor 58/58, lighting 28/28, orientation 63/63 (exit 0). Initial post-fix wall suite 47/47, exit 0. Import exit 0; known restricted editor TCP listener errors only, no script/resource errors. Final expanded suite/smoke results below. No manual gameplay test performed; narrow corners, several enemies surrounding the player, player intentionally walking into a stationary enemy, visual idle/fire-light behavior and full route remain manual checks. Clearance prevents enemy-driven contact, but does not enable walking through solid enemies or guarantee an escape from arbitrary enclosing configurations.
+
+EA02 final validation: expanded enemy suite **53/53**, exit 0; total across five suites **274 checks, zero failures**. Bounded main-scene smoke (`timeout 30`, same XDG environment, `--headless --path . --quit-after 120`) exit 0 without errors. Scoped changes and preserved prior work reviewed; `git diff --check` passes. Manual checks remain pending.
+
+## IN01 / launch investigation — 2026-11-15
+
+Preserved prior EA01/EA02 dirty tree on feat/enemies-update (7250348). Installed Godot 4.7.2. Main-scene headless launch exit 0; normal graphical main-scene bounded launch exit 0 without errors. Connected Godot MCP sessions list empty. Normal user-data logs contain renderer/version only, no script errors. Temporary /tmp/echoes_launch_probe.gd loads the existing level under a SceneTree diagnostic and captures game-only images /tmp/echoes-launch-before.png and /tmp/echoes-launch-after.png. Rendered frames advance; paused=false, player physics processing=true; player moved from (1713,2881) to (1736.649,2504.067), and later image shows E — Open door. Real keyboard activity may have overlapped injected W, so movement is evidence of an active scene, not a controlled OS-input acceptance pass.
+
+Concrete defect found: project.godot interact event has device 16; device-0 KEY_E fails InputMap.event_is_action while W/F pass. Setting interact device to -1 repairs event matching. /tmp/echoes_interaction_probe.gd confirms a device-0 physical E event delivered through Input.parse_input_event opens D01 from 90 units away. Added both mapping and real input-path regression to tests/test_level.gd. Command with existing isolated XDG environment: timeout 30 /home/ankitsuman/Applications/Godot/godot --headless --path . --script res://tests/test_level.gd → 75 checks, 0 failures, exit 0.
+
+This repairs E but does not establish the cause of the user-reported all-key/editor freeze. User launches with Play and sees no start/pickup prompt. Level has no start prompt and begins with both lights off. Awaiting focus/flashlight/movement test in the failing editor launch; no speculative renderer/controller changes.

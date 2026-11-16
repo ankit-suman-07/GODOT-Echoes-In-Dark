@@ -21,10 +21,15 @@ func _run() -> void:
 	root.add_child(level)
 	await physics_frame
 	await physics_frame
+	var keyboard_e := InputEventKey.new()
+	keyboard_e.device = 0
+	keyboard_e.physical_keycode = KEY_E
+	keyboard_e.pressed = true
+	check(InputMap.event_is_action(keyboard_e, "interact"), "Physical E from normal keyboard activates interaction")
 	var geometry: Node2D = level.get_node("Geometry")
 	var player: CharacterBody2D = level.get_node("player")
 	# Freeze actors while exercising physics explicitly.
-	for actor_name in ["player", "enemy", "enemy_fire"]:
+	for actor_name in ["player", "enemy", "enemy_fire", "enemy_2"]:
 		level.get_node(actor_name).set_physics_process(false)
 	check(geometry.ROOM_RECTS.size() == 8, "Eight peripheral rooms plus Main Hall required")
 	check(geometry.CONNECTIONS.size() == 10, "Every map connection must be represented")
@@ -125,6 +130,18 @@ func _run() -> void:
 	root.add_child(level)
 	await physics_frame
 	check(not level.has_exit_key and level.has_node("key") and not level.completed, "Fresh level resets key and completion state")
+	var fresh_player: CharacterBody2D = level.get_node("player")
+	fresh_player.set_physics_process(false)
+	fresh_player.position = level.get_node("D01").position + Vector2(0, 90)
+	for tick in range(8):
+		await physics_frame
+	check(level.focused == level.get_node("D01"), "First door gains interaction focus")
+	Input.parse_input_event(keyboard_e)
+	for tick in range(8):
+		await physics_frame
+	check(level.get_node("D01").is_open, "Normal keyboard E reaches unhandled input and opens first door")
+	keyboard_e.pressed = false
+	Input.parse_input_event(keyboard_e)
 	print("LEVEL CHECKS: %d; FAILURES: %d" % [checks, failures])
 	level.queue_free()
 	quit(1 if failures else 0)
@@ -140,6 +157,6 @@ func _blocked(origin: Vector2, motion: Vector2, shape: Shape2D) -> bool:
 	query.transform = Transform2D(0, origin)
 	query.motion = motion
 	query.collision_mask = 1
-	query.exclude = [level.get_node("player").get_rid(), level.get_node("enemy").get_rid(), level.get_node("enemy_fire").get_rid()]
+	query.exclude = [level.get_node("player").get_rid(), level.get_node("enemy").get_rid(), level.get_node("enemy_fire").get_rid(), level.get_node("enemy_2").get_rid()]
 	var result: PackedFloat32Array = level.get_world_2d().direct_space_state.cast_motion(query)
 	return result[0] < 0.999

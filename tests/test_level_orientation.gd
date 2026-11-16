@@ -100,7 +100,7 @@ func _run() -> void:
 	Input.action_release("back")
 	await physics_frame
 	await physics_frame
-	for actor_name in ["player", "enemy", "enemy_fire"]:
+	for actor_name in ["player", "enemy", "enemy_fire", "enemy_2"]:
 		level.get_node(actor_name).set_physics_process(false)
 	player.position = start
 	var initial_reachable := _reachable(geometry, start)
@@ -118,7 +118,7 @@ func _run() -> void:
 	# Repositioned AI uses the existing detection callbacks and moves toward its target.
 	for actor_name in ["enemy", "enemy_fire"]:
 		var enemy: CharacterBody2D = level.get_node(actor_name)
-		player.position = enemy.position + Vector2(0, -96)
+		player.position = enemy.position + Vector2(0, -120)
 		if actor_name == "enemy":
 			enemy._on_detection_area_body_entered(player)
 		else:

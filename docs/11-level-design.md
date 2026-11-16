@@ -188,3 +188,7 @@ Before the vertical correction, image ×3 approximated world coordinates, snappe
 D01/D08 can open/close via E. D02–D07 remain red/locked, awaiting LD-Q02. D09 now uses the exit key and an escape trigger as required by R05 and the user's implementation instruction; key is retained in session state. C01 has connected floor geometry with no door behavior; this does not resolve LD-Q03's door-type question. LD-Q01, LD-Q02, C01 semantics, safety/persistence and enemy navigation policy remain open. The user's save-point request authorizes that feature in principle, superseding the older exclusion, but session checkpoint versus persistent-save rules still need input.
 
 Automated subset evidence: docs/08; task states: docs/07. No manual map alignment, aesthetic or full player-input playthrough verified.
+
+## EA01 spawn supplement — 2026-11-15
+
+User explicitly authorizes 3–5 enemies if fewer exist. Retained both reflected Hall spawns; added enemy_2 at (1712,2304) in the lower Hall passage using enemy.tscn, away from the Security spawn and D01 barrier. No topology/door/object-marker change. Three enemies remain direct proximity chase/idle with physical wall collisions; patrol/LOS/door access/safety decisions in LD-Q04–05 remain unresolved. Automated floor containment and completion-stop checks pass; manual crowding/doorway and route balance checks pending.

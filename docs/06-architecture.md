@@ -57,3 +57,11 @@ State is local only: velocity/rotation, light enabled flags and enemy `player_ch
 Scenes reference existing textures, scripts and PackedScenes via resource paths/UIDs. Enemy sprites come from `sprites/enemy/`; lighting from `assets/lights/`; player uses `icon.svg`. `map/game_map.png`, `assets/treasure.png`, `assets/lights/1.png` have no scene consumers. No audio resources or external packages.
 
 **Proposed, approval required:** reuse the placeholder manager as a minimal session-state owner; connect key/exit/catch events to it and UI by signals, define reset/pause rules, add environment collisions and explicit AI states. Names, signatures and additional file paths are deliberately unspecified until tasks are approved. Do not install a framework or autoload by default. See P01–P05 and the development plan.
+
+## EA01 implementation supplement
+
+Both existing enemy scripts retain separate overlap callbacks and local player_chase state. Targets are acquired from body_entered (existing player name filter), cleared on matching body_exited or invalid/queued deletion; movement uses global positions. _ready duplicates the existing circular shape per instance and applies exported detection_radius (250). SPEED defaults to 150. Existing node paths, layers/masks and signal connections are preserved. Level adds enemy_2 from enemy.tscn at (1712,2304); the existing completion actor list includes it. No manager, navigation, player or visual controller change.
+
+## EA02 chase stopping clearance
+
+Both enemy scripts retain detection/target/fire-light state and move_and_slide. While detected, remaining travel is target center distance minus stopping_distance (default 96); velocity is zero within 0.01 of that threshold, otherwise capped at min(SPEED, remaining / delta). This clears the player radius 32 plus the enemy rectangle's half diagonal (~56.57), leaving ~7.4 units at the worst angle. No collision masks, player controller or scene changes. Player_chase continues to represent detection even when proximity stops motion; target exit still clears it.
