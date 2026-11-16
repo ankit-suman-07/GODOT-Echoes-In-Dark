@@ -56,7 +56,7 @@ func _on_exit_entered(body: Node2D) -> void:
 		return
 	completed = true
 	focused = null
-	for actor_name in ["player", "enemy", "enemy_fire"]:
+	for actor_name in ["player", "enemy", "enemy_fire", "enemy_2"]:
 		var actor: CharacterBody2D = get_node(actor_name)
 		actor.velocity = Vector2.ZERO
 		actor.set_physics_process(false)

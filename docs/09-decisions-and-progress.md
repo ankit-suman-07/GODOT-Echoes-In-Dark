@@ -80,3 +80,43 @@ Implemented: four player direction sheets on preserved Sprite2D; enemy four-fram
 Commits: `1ac0e93` player, `e62665b` enemy; lighting commit follows (use `git log -3 --oneline`). AV01–AV03 implemented with automated evidence; manual visual acceptance pending. Tests: actor 58, lighting 28, level 72 checks pass; smoke pass; editor TCP sandbox errors remain qualified in docs/08. Existing battery/patrol/save gaps remain unchanged. Enemy direction artwork is identical across supplied sheets; rotation is the intentional visual fallback. Pack has a flashlight item icon but no beam asset, so no decorative icon replaces functional lighting.
 
 Next action: manually play the level and check VX01–VX03, especially backwards sprite motion versus forward beam aim, cone range/readability, enemy facing and door shadows. No additional gameplay implementation, push or merge is authorized by this visual task.
+
+## Orientation correction handoff
+
+User explicitly authorizes vertical correction and one focused commit; no push/merge. Clean baseline `4bfb5a6` on main, branch `fix/invert-level-vertical`. OR01/LD07 implemented and automated checks pass; manual visual acceptance pending. Original image retained unchanged; docs/11 now records the approved bottom-start/top-exit transform, current room positions and object register separately from historical image analysis.
+
+Changes: explicit geometry rectangles and all 25 placed world-node coordinates reflected via y′=3328−y, player initial rotation set to 0 (forward up), upright Hall label bounds reflected; room labels generated within reflected rooms. Walls/colliders/occluders rebuilt by unchanged generator. No negative Y scale, moved screen UI, gameplay/AI rewrite or asset replacement. No navigation/patrol/custom camera limits exist; camera follow and unchanged bounds are preserved.
+
+Verification: 63 orientation + 72 level + 58 actor + 28 lighting checks pass; scene smoke passes. Editor import sandbox TCP errors remain; see docs/08 for exact commands and limitations. All existing door/key gating and pre-existing gameplay blockers remain unchanged. Next action: manual upward-route, art/UI/camera and shadow inspection. Commit ID in session report/`git log -1 --oneline`; no publication.
+
+## EA01 handoff — 2026-11-15
+
+- Baseline / engine / branch: 7250348 / Godot 4.7.2 / feat/enemies-update; initially clean.
+- Authorization: current user requests minimal enemy extension; no commit/push. EA01/R06 proximity subset implemented with automated checks passing; manual acceptance pending. Full T06/R07 unchanged.
+- Changed behavior/files: scripts/enemy.gd and enemy_fire.gd speed/radius/target guards; scenes/level.tscn adds third existing-scene Hall instance; scripts/level.gd completion list stops it. tests/test_enemies.gd (+ engine UID) adds physics checks; four existing suites updated for third actor/configured radius. docs/05–09 and 11 record scope/evidence/spawn. Player, geometry, assets, input, camera and gameplay progression rules unchanged.
+- Commands/results: docs/08 EA01; import exit 0 with known restricted TCP listener errors; enemy 32, level 72, actor 58, lighting 28, orientation 63 checks all pass (exit 0). Runtime smoke and static review recorded below.
+- Decisions: three total enemies, SPEED 150, detection_radius 250; copy shape per instance, retain existing overlap semantics and body-name filter. Hall spawn (1712,2304), no new layout.
+- Risks/pending manual: rendered chase/animation/light, Hall doorway crowding/balance, full movement/key/door/exit/R restart regression. No manual gameplay claim. Proximity still detects through walls; collisions still constrain direct chase. No navigation, patrol, catch or safety policy invented.
+- Git: scoped uncommitted work, no commits/push. Next eligible verification: manual V02–05/VX02 for EA01; broader AI remains dependent on existing patrol/LOS/catch/safety decisions.
+
+EA01 final review: bounded main-scene `--headless --path . --quit-after 120` (timeout 30, same XDG environment) exit 0, no errors. Full scoped diff reviewed; `git diff --check` passes. No unrelated import-sidecar or game-system changes.
+
+## EA02 handoff — 2026-11-15
+
+- Baseline/branch/engine: 7250348 plus existing dirty EA01 work, feat/enemies-update, Godot 4.7.2. Preserved all prior edits.
+- Authorization/status: user requests minimal wall-trap fix, no commit/push. EA02 R01/R06 subset implemented; manual acceptance pending.
+- Files/behavior: scripts/enemy.gd and scripts/enemy_fire.gd add configurable stopping_distance 96, zero pursuit velocity within clearance and capped final step. tests/test_enemies.gd adds physics wall/escape/oversized-step checks; tests/test_level_orientation.gd target distance 96→120 preserves its chase-motion assertion. docs/05–09 updated. No additional scene, collision layer, geometry, player or detection changes in EA02.
+- Root-cause evidence: constant pursuit into solid player reproduced continuous wall-adjacent contact for all three enemies before fix (6 failing assertions), resolved after fix. Complete intermittent lockup not reproduced by straight-wall fixture. Commands/results in docs/08.
+- Decisions: 96 clears unchanged rectangle half diagonal plus player radius; preserve solid enemies and wall boundaries. No collision exceptions or new escape mechanics necessary for tested encounter.
+- Manual/risk: inspect corners and simultaneous crowd encounters; solid enemies can still obstruct a player who deliberately walks into them. No universal anti-enclosure guarantee or manual playability claim.
+- Git: prior EA01 and current EA02 remain uncommitted, no push. Next eligible action: manual wall/corner/crowd V02/V05 regression; broader AI policies remain unresolved and outside scope.
+
+EA02 final validation: expanded enemy suite **53/53**, exit 0; total across five suites **274 checks, zero failures**. Bounded main-scene smoke (`timeout 30`, same XDG environment, `--headless --path . --quit-after 120`) exit 0 without errors. Scoped changes and preserved prior work reviewed; `git diff --check` passes. Manual checks remain pending.
+
+## IN01 / launch-freeze investigation handoff — 2026-11-15
+
+Task/status: user reports frozen Play launch/all keys inactive; investigation ongoing, not claimed fixed. Baseline 7250348 plus preserved EA01/EA02 edits, feat/enemies-update, Godot 4.7.2. Graphical temporary diagnostic renders and advances player/physics, and shows first-door prompt. Headless and normal graphical main launch exit 0, logs show no script errors; no connected editor MCP session.
+
+Files/behavior: project.godot interact device 16→-1; tests/test_level.gd adds normal-keyboard mapping and real event-delivery/first-door opening assertions; docs/05,07–09 record IN01. Identified E-specific binding defect with before/after event checks. No other input/controller/renderer changes. tests/test_level.gd 75/75, exit 0; commands/evidence and diagnostic limitations in docs/08. Broader all-input freeze cause pending.
+
+Manual pending: Play launch after focusing game, F toggle and held W, editor debugger/focus state if neither works. E fix needs editor settings reloaded if its in-memory project configuration is stale. No assertion of full manual playability; temporary screenshots in /tmp are diagnostic artifacts only. Existing dirty work preserved, no commits/push. Next: inspect failing running game and response to requested input/focus test.

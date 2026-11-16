@@ -52,9 +52,9 @@ func _run() -> void:
 		check(enemy_visual.scale == Vector2(2.5, 2.5), "Enemy visual spans existing 80-unit body")
 		check(enemy.get_node("CollisionShape2D").shape.size == Vector2(80, 80), "Enemy hitbox unchanged")
 		var area_name := "DetectionArea" if actor_name == "enemy" else "Area2D"
-		var expected_radius := 304.42078 if actor_name == "enemy" else 192.0
+		var expected_radius: float = enemy.detection_radius
 		var shape_name := "CollisionShape2D2" if actor_name == "enemy" else "CollisionShape2D"
-		check(is_equal_approx(enemy.get_node(area_name + "/" + shape_name).shape.radius, expected_radius), "Detection radius unchanged")
+		check(is_equal_approx(enemy.get_node(area_name + "/" + shape_name).shape.radius, expected_radius), "Detection shape uses configured radius")
 		for direction in [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]:
 			enemy.velocity = direction * 200
 			var before := enemy.transform

@@ -21,20 +21,25 @@ func _run() -> void:
 	root.add_child(level)
 	await physics_frame
 	await physics_frame
+	var keyboard_e := InputEventKey.new()
+	keyboard_e.device = 0
+	keyboard_e.physical_keycode = KEY_E
+	keyboard_e.pressed = true
+	check(InputMap.event_is_action(keyboard_e, "interact"), "Physical E from normal keyboard activates interaction")
 	var geometry: Node2D = level.get_node("Geometry")
 	var player: CharacterBody2D = level.get_node("player")
 	# Freeze actors while exercising physics explicitly.
-	for actor_name in ["player", "enemy", "enemy_fire"]:
+	for actor_name in ["player", "enemy", "enemy_fire", "enemy_2"]:
 		level.get_node(actor_name).set_physics_process(false)
 	check(geometry.ROOM_RECTS.size() == 8, "Eight peripheral rooms plus Main Hall required")
 	check(geometry.CONNECTIONS.size() == 10, "Every map connection must be represented")
-	check(player.position.distance_to(Vector2(1713, 447)) < 1, "Security spawn")
+	check(player.position.distance_to(Vector2(1713, 2881)) < 1, "Security spawn")
 	check(not player.get_node("flashlight").enabled, "Flashlight starts off")
 	check(not player.get_node("light_all_around").enabled, "Round light starts off")
 	check(InputMap.action_has_event("interact", _interaction_event()), "E interaction binding")
 	# Verify the entire structural floor graph is connected, including both upper room doors.
 	var cells: Dictionary = geometry.floor_cells
-	var pending: Array[Vector2i] = [Vector2i(53, 14)]
+	var pending: Array[Vector2i] = [Vector2i(53, 89)]
 	var seen := {}
 	while not pending.is_empty():
 		var cell: Vector2i = pending.pop_back()
@@ -69,7 +74,7 @@ func _run() -> void:
 			await physics_frame
 			door.interact()
 			check(door.is_open, id + " refuses close on actor")
-			player.position = Vector2(1713, 447)
+			player.position = Vector2(1713, 2881)
 			await physics_frame
 			door.interact()
 			await physics_frame
@@ -88,13 +93,13 @@ func _run() -> void:
 		if id == "D01": normal = Vector2.DOWN
 		if id == "D03" or id == "D05": normal = Vector2.DOWN
 		check(not _blocked(center - normal * 64, normal * 128, enemy_shape), id + " fits existing enemy shape when open")
-	check(_blocked(Vector2(1450, 150), Vector2(0, -120), body_shape), "Security north wall contains player")
-	check(_blocked(Vector2(900, 1080), Vector2(0, 220), body_shape), "Storage south wall has no unmarked shortcut")
+	check(_blocked(Vector2(1450, 3178), Vector2(0, 120), body_shape), "Security south wall contains player")
+	check(_blocked(Vector2(900, 2248), Vector2(0, -220), body_shape), "Storage north wall has no unmarked shortcut")
 	# Interaction selection and occlusion: proximity alone must not reach through walls.
-	player.position = Vector2(951, 1120)
+	player.position = Vector2(951, 2208)
 	level._physics_process(0.016)
 	check(level.focused == null, "No interactables in empty part of Storage")
-	player.position = Vector2(2100, 2550)
+	player.position = Vector2(2100, 778)
 	level._physics_process(0.016)
 	check(level.focused == level.get_node("key"), "Nearby key selected")
 	level._on_exit_entered(player)
@@ -125,6 +130,18 @@ func _run() -> void:
 	root.add_child(level)
 	await physics_frame
 	check(not level.has_exit_key and level.has_node("key") and not level.completed, "Fresh level resets key and completion state")
+	var fresh_player: CharacterBody2D = level.get_node("player")
+	fresh_player.set_physics_process(false)
+	fresh_player.position = level.get_node("D01").position + Vector2(0, 90)
+	for tick in range(8):
+		await physics_frame
+	check(level.focused == level.get_node("D01"), "First door gains interaction focus")
+	Input.parse_input_event(keyboard_e)
+	for tick in range(8):
+		await physics_frame
+	check(level.get_node("D01").is_open, "Normal keyboard E reaches unhandled input and opens first door")
+	keyboard_e.pressed = false
+	Input.parse_input_event(keyboard_e)
 	print("LEVEL CHECKS: %d; FAILURES: %d" % [checks, failures])
 	level.queue_free()
 	quit(1 if failures else 0)
@@ -140,6 +157,6 @@ func _blocked(origin: Vector2, motion: Vector2, shape: Shape2D) -> bool:
 	query.transform = Transform2D(0, origin)
 	query.motion = motion
 	query.collision_mask = 1
-	query.exclude = [level.get_node("player").get_rid(), level.get_node("enemy").get_rid(), level.get_node("enemy_fire").get_rid()]
+	query.exclude = [level.get_node("player").get_rid(), level.get_node("enemy").get_rid(), level.get_node("enemy_fire").get_rid(), level.get_node("enemy_2").get_rid()]
 	var result: PackedFloat32Array = level.get_world_2d().direct_space_state.cast_motion(query)
 	return result[0] < 0.999
